@@ -19,13 +19,18 @@
   "build": {
   "appId": "com.88engineering.ai",
   "productName": "88 Engineering AI",
+  "files": [
+    "public/**/*",
+    "main.js",
+    "package.json"
+  ],
   "win": {
-    "target": "nsis"
+    "target": [
+      "nsis",
+      "portable"
+    ]
   },
   "npmRebuild": false
-  },
-  "win": {
-  "target": "portable"
-  }
+},
   
 }
