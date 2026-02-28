@@ -19,6 +19,7 @@
   "build": {
   "appId": "com.88engineering.ai",
   "productName": "88 Engineering AI",
+  "asar": true,
   "files": [
     "public/**/*",
     "main.js",
