@@ -5,27 +5,44 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const axios = require("axios");
 
+dotenv.config();
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
 
 /* =========================
-   โหลด ENV
+   ENV CONFIG
 ========================= */
-dotenv.config();
 
-const INTERNAL_KEY = "88ENG2025";
-const API_KEY = process.env.INFO_API_KEY;   // ใช้ตัวเดียวทั้งระบบ
+// ใช้ key เดียวทั้งระบบ
+const API_KEY = process.env.POST_API_KEY;  
+const INTERNAL_KEY = process.env.INTERNAL_KEY || "88ENG2025";
 
 if (!API_KEY) {
-  console.error("❌ INFO_API_KEY not found in environment variables");
+  console.error("❌ POST_API_KEY not found in environment variables");
   process.exit(1);
 }
 
 /* =========================
-   โหลดไฟล์ Prompt
+   BASIC ROUTES (กัน 404)
 ========================= */
+
+// root route แก้ Cannot GET /
+app.get("/", (req, res) => {
+  res.send("88 Engineering AI Server is running");
+});
+
+// health check สำหรับ Render
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
+/* =========================
+   LOAD FILES
+========================= */
+
 const companyData = fs.readFileSync(
   path.join(__dirname, "data/company.txt"),
   "utf8"
@@ -42,8 +59,9 @@ const promptPost = fs.readFileSync(
 );
 
 /* =========================
-   FUNCTION เรียก DeepSeek
+   CALL DEEPSEEK
 ========================= */
+
 async function callDeepseek(systemPrompt, userInput, temperature = 0.4) {
   const response = await axios.post(
     "https://api.deepseek.com/chat/completions",
@@ -69,6 +87,7 @@ async function callDeepseek(systemPrompt, userInput, temperature = 0.4) {
 /* =========================
    ROUTE : /info
 ========================= */
+
 app.post("/info", async (req, res) => {
   try {
 
@@ -96,7 +115,7 @@ ${companyData}
     res.json({ reply });
 
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error("INFO ERROR:", err.response?.data || err.message);
     res.status(500).json({ error: "DeepSeek API Error" });
   }
 });
@@ -104,6 +123,7 @@ ${companyData}
 /* =========================
    ROUTE : /post
 ========================= */
+
 app.post("/post", async (req, res) => {
   try {
 
@@ -131,7 +151,7 @@ ${companyData}
     res.json({ reply });
 
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error("POST ERROR:", err.response?.data || err.message);
     res.status(500).json({ error: "DeepSeek API Error" });
   }
 });
@@ -139,6 +159,7 @@ ${companyData}
 /* =========================
    START SERVER
 ========================= */
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
