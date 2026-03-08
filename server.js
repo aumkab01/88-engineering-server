@@ -14,10 +14,13 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }
+});
 
 /* =========================
-   ENV CONFIG
+ENV CONFIG
 ========================= */
 
 const API_KEY = process.env.POST_API_KEY;
@@ -30,7 +33,7 @@ if (!API_KEY) {
 }
 
 /* =========================
-   BASIC ROUTES
+BASIC ROUTES
 ========================= */
 
 app.get("/", (req, res) => {
@@ -42,7 +45,7 @@ app.get("/health", (req, res) => {
 });
 
 /* =========================
-   SAFE FILE LOADER
+SAFE FILE LOADER
 ========================= */
 
 function loadFileSafe(filePath) {
@@ -54,7 +57,7 @@ function loadFileSafe(filePath) {
 }
 
 /* =========================
-   LOAD DATA FILES
+LOAD DATA
 ========================= */
 
 const companyData = loadFileSafe("data/company.txt");
@@ -62,10 +65,10 @@ const promptInfo = loadFileSafe("data/prompt-info.txt");
 const promptPost = loadFileSafe("data/prompt-post.txt");
 
 /* =========================
-   CALL DEEPSEEK
+CALL DEEPSEEK
 ========================= */
 
-async function callDeepseek(systemPrompt, userInput, temperature = 0.4) {
+async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
 
   const response = await axios.post(
     "https://api.deepseek.com/chat/completions",
@@ -75,7 +78,7 @@ async function callDeepseek(systemPrompt, userInput, temperature = 0.4) {
         { role: "system", content: systemPrompt },
         { role: "user", content: userInput }
       ],
-      temperature
+      temperature: temp
     },
     {
       headers: {
@@ -90,26 +93,26 @@ async function callDeepseek(systemPrompt, userInput, temperature = 0.4) {
 }
 
 /* =========================
-   GEMINI IMAGE ANALYSIS
+GEMINI IMAGE ANALYSIS
 ========================= */
 
-async function analyzeImage(base64){
+async function analyzeImage(base64) {
 
-  if(!GEMINI_KEY) return "";
+  if (!GEMINI_KEY) return "";
 
   const response = await axios.post(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
     {
-      contents:[
+      contents: [
         {
-          parts:[
+          parts: [
             {
-              text:"Describe this image. Focus on machines, control panels, mechanical components, and error displays."
+              text: "Describe this image briefly. Focus on machines, control panels, mechanical parts, and error displays."
             },
             {
-              inlineData:{
-                mimeType:"image/jpeg",
-                data:base64
+              inlineData: {
+                mimeType: "image/jpeg",
+                data: base64
               }
             }
           ]
@@ -123,13 +126,41 @@ async function analyzeImage(base64){
 }
 
 /* =========================
-   AUTH
+PROCESS MULTIPLE IMAGES
 ========================= */
 
-function checkAuth(req,res){
+async function processImages(files) {
 
-  if(req.headers["x-internal-key"] !== INTERNAL_KEY){
-    res.status(401).json({error:"Unauthorized"});
+  let description = "";
+  let previews = [];
+
+  if (!files || files.length === 0)
+    return { description, previews };
+
+  for (let i = 0; i < files.length; i++) {
+
+    const base64 = files[i].buffer.toString("base64");
+
+    previews.push(`data:${files[i].mimetype};base64,${base64}`);
+
+    const desc = await analyzeImage(base64);
+
+    description += `Image ${i + 1}: ${desc}\n`;
+
+  }
+
+  return { description, previews };
+
+}
+
+/* =========================
+AUTH
+========================= */
+
+function checkAuth(req, res) {
+
+  if (req.headers["x-internal-key"] !== INTERNAL_KEY) {
+    res.status(401).json({ error: "Unauthorized" });
     return false;
   }
 
@@ -138,24 +169,19 @@ function checkAuth(req,res){
 }
 
 /* =========================
-   INFO
+INFO
 ========================= */
 
-app.post("/info", upload.single("image"), async (req,res)=>{
+app.post("/info", upload.array("images", 5), async (req, res) => {
 
-  try{
+  try {
 
-    if(!checkAuth(req,res)) return;
+    if (!checkAuth(req, res)) return;
 
     const message = req.body.message;
-    const image = req.file;
+    const files = req.files;
 
-    let imageDescription="";
-
-    if(image){
-      const base64 = image.buffer.toString("base64");
-      imageDescription = await analyzeImage(base64);
-    }
+    const { description, previews } = await processImages(files);
 
     const systemPrompt = `
 ${promptInfo}
@@ -168,42 +194,40 @@ ${companyData}
 User Question:
 ${message}
 
-Image Analysis:
-${imageDescription}
+Images Context:
+${description}
 `;
 
-    const reply = await callDeepseek(systemPrompt,finalInput,0.3);
+    const reply = await callDeepseek(systemPrompt, finalInput, 0.3);
 
-    res.json({reply});
+    res.json({
+      reply,
+      images: previews
+    });
 
-  }catch(err){
+  } catch (err) {
 
     console.log(err.message);
-    res.status(500).json({error:"AI Error"});
+    res.status(500).json({ error: "AI Error" });
 
   }
 
 });
 
 /* =========================
-   POST
+POST
 ========================= */
 
-app.post("/post", upload.single("image"), async (req,res)=>{
+app.post("/post", upload.array("images", 5), async (req, res) => {
 
-  try{
+  try {
 
-    if(!checkAuth(req,res)) return;
+    if (!checkAuth(req, res)) return;
 
     const message = req.body.message;
-    const image = req.file;
+    const files = req.files;
 
-    let imageDescription="";
-
-    if(image){
-      const base64 = image.buffer.toString("base64");
-      imageDescription = await analyzeImage(base64);
-    }
+    const { description, previews } = await processImages(files);
 
     const systemPrompt = `
 ${promptPost}
@@ -216,42 +240,40 @@ ${companyData}
 User Request:
 ${message}
 
-Image Analysis:
-${imageDescription}
+Images Context:
+${description}
 `;
 
-    const reply = await callDeepseek(systemPrompt,finalInput,0.5);
+    const reply = await callDeepseek(systemPrompt, finalInput, 0.5);
 
-    res.json({reply});
+    res.json({
+      reply,
+      images: previews
+    });
 
-  }catch(err){
+  } catch (err) {
 
     console.log(err.message);
-    res.status(500).json({error:"AI Error"});
+    res.status(500).json({ error: "AI Error" });
 
   }
 
 });
 
 /* =========================
-   CHECK MACHINE
+CHECK MACHINE
 ========================= */
 
-app.post("/check", upload.single("image"), async (req,res)=>{
+app.post("/check", upload.array("images", 5), async (req, res) => {
 
-  try{
+  try {
 
-    if(!checkAuth(req,res)) return;
+    if (!checkAuth(req, res)) return;
 
     const message = req.body.message;
-    const image = req.file;
+    const files = req.files;
 
-    let imageDescription="";
-
-    if(image){
-      const base64 = image.buffer.toString("base64");
-      imageDescription = await analyzeImage(base64);
-    }
+    const { description, previews } = await processImages(files);
 
     const systemPrompt = `
 คุณคือผู้ช่วยช่างเครื่องล้างจาน
@@ -262,29 +284,32 @@ app.post("/check", upload.single("image"), async (req,res)=>{
 User Problem:
 ${message}
 
-Image Analysis:
-${imageDescription}
+Images Context:
+${description}
 `;
 
-    const reply = await callDeepseek(systemPrompt,finalInput,0.2);
+    const reply = await callDeepseek(systemPrompt, finalInput, 0.2);
 
-    res.json({reply});
+    res.json({
+      reply,
+      images: previews
+    });
 
-  }catch(err){
+  } catch (err) {
 
     console.log(err.message);
-    res.status(500).json({error:"AI Error"});
+    res.status(500).json({ error: "AI Error" });
 
   }
 
 });
 
 /* =========================
-   START SERVER
+START SERVER
 ========================= */
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,()=>{
-  console.log("Server running on port "+PORT);
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
 });
