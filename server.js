@@ -4,23 +4,28 @@ const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const axios = require("axios");
+const multer = require("multer");
 
 dotenv.config();
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 /* =========================
    ENV CONFIG
 ========================= */
 
 const API_KEY = process.env.POST_API_KEY;
+const GEMINI_KEY = process.env.GEMINI_API_KEY;
 const INTERNAL_KEY = process.env.INTERNAL_KEY || "88ENG2025";
 
 if (!API_KEY) {
-  console.error("❌ POST_API_KEY not found in environment variables");
+  console.error("❌ POST_API_KEY not found");
   process.exit(1);
 }
 
@@ -87,6 +92,39 @@ async function callDeepseek(systemPrompt, userInput, temperature = 0.4) {
 }
 
 /* =========================
+   GEMINI IMAGE ANALYSIS
+========================= */
+
+async function analyzeImage(base64) {
+
+  if (!GEMINI_KEY) return "";
+
+  const response = await axios.post(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+    {
+      contents: [
+        {
+          parts: [
+            {
+              text:
+                "Describe what is in this image. Focus on machines, control panels, error codes, and mechanical components."
+            },
+            {
+              inlineData: {
+                mimeType: "image/jpeg",
+                data: base64
+              }
+            }
+          ]
+        }
+      ]
+    }
+  );
+
+  return response.data.candidates[0].content.parts[0].text;
+}
+
+/* =========================
    AUTH CHECK
 ========================= */
 
@@ -102,13 +140,19 @@ function checkAuth(req, res) {
    ROUTE : /info
 ========================= */
 
-app.post("/info", async (req, res) => {
+app.post("/info", upload.single("image"), async (req, res) => {
   try {
+
     if (!checkAuth(req, res)) return;
 
     const userInput = req.body.message;
-    if (!userInput || userInput.length > 1500) {
-      return res.status(400).json({ error: "Invalid input" });
+    const image = req.file;
+
+    let imageDescription = "";
+
+    if (image) {
+      const base64 = image.buffer.toString("base64");
+      imageDescription = await analyzeImage(base64);
     }
 
     const systemPrompt = `
@@ -120,11 +164,22 @@ ${promptInfo}
 ${companyData}
 `;
 
-    const reply = await callDeepseek(systemPrompt, userInput, 0.3);
+    const finalInput = `
+User Question:
+${userInput}
+
+Image Analysis:
+${imageDescription}
+`;
+
+    const reply = await callDeepseek(systemPrompt, finalInput, 0.3);
+
     res.json({ reply });
 
   } catch (err) {
+
     console.error("INFO ERROR:", err.response?.data || err.message);
+
     res.status(500).json({ error: "DeepSeek API Error" });
   }
 });
@@ -133,13 +188,23 @@ ${companyData}
    ROUTE : /post
 ========================= */
 
-app.post("/post", async (req, res) => {
+app.post("/post", upload.single("image"), async (req, res) => {
+
   try {
+
     if (!checkAuth(req, res)) return;
 
     const userInput = req.body.message;
-    if (!userInput || userInput.length > 1500) {
-      return res.status(400).json({ error: "Invalid input" });
+    const image = req.file;
+
+    let imageDescription = "";
+
+    if (image) {
+
+      const base64 = image.buffer.toString("base64");
+
+      imageDescription = await analyzeImage(base64);
+
     }
 
     const systemPrompt = `
@@ -151,26 +216,49 @@ ${promptPost}
 ${companyData}
 `;
 
-    const reply = await callDeepseek(systemPrompt, userInput, 0.5);
+    const finalInput = `
+User Request:
+${userInput}
+
+Image Analysis:
+${imageDescription}
+`;
+
+    const reply = await callDeepseek(systemPrompt, finalInput, 0.5);
+
     res.json({ reply });
 
   } catch (err) {
+
     console.error("POST ERROR:", err.response?.data || err.message);
+
     res.status(500).json({ error: "DeepSeek API Error" });
+
   }
+
 });
 
 /* =========================
    ROUTE : /tech
 ========================= */
 
-app.post("/tech", async (req, res) => {
+app.post("/tech", upload.single("image"), async (req, res) => {
+
   try {
+
     if (!checkAuth(req, res)) return;
 
     const userInput = req.body.message;
-    if (!userInput || userInput.length > 2000) {
-      return res.status(400).json({ error: "Invalid input" });
+    const image = req.file;
+
+    let imageDescription = "";
+
+    if (image) {
+
+      const base64 = image.buffer.toString("base64");
+
+      imageDescription = await analyzeImage(base64);
+
     }
 
     const systemPrompt = `
@@ -192,26 +280,49 @@ ${productSpecs}
 ${technicalData}
 `;
 
-    const reply = await callDeepseek(systemPrompt, userInput, 0.2);
+    const finalInput = `
+User Question:
+${userInput}
+
+Image Analysis:
+${imageDescription}
+`;
+
+    const reply = await callDeepseek(systemPrompt, finalInput, 0.2);
+
     res.json({ reply });
 
   } catch (err) {
+
     console.error("TECH ERROR:", err.response?.data || err.message);
+
     res.status(500).json({ error: "DeepSeek API Error" });
+
   }
+
 });
 
 /* =========================
    ROUTE : /check
 ========================= */
 
-app.post("/check", async (req, res) => {
+app.post("/check", upload.single("image"), async (req, res) => {
+
   try {
+
     if (!checkAuth(req, res)) return;
 
     const userInput = req.body.message;
-    if (!userInput) {
-      return res.status(400).json({ error: "Invalid input" });
+    const image = req.file;
+
+    let imageDescription = "";
+
+    if (image) {
+
+      const base64 = image.buffer.toString("base64");
+
+      imageDescription = await analyzeImage(base64);
+
     }
 
     const systemPrompt = `
@@ -219,13 +330,26 @@ app.post("/check", async (req, res) => {
 ให้วิเคราะห์อาการและแนะนำขั้นตอนตรวจสอบเป็นลำดับขั้น
 `;
 
-    const reply = await callDeepseek(systemPrompt, userInput, 0.2);
+    const finalInput = `
+User Problem:
+${userInput}
+
+Image Analysis:
+${imageDescription}
+`;
+
+    const reply = await callDeepseek(systemPrompt, finalInput, 0.2);
+
     res.json({ reply });
 
   } catch (err) {
+
     console.error("CHECK ERROR:", err.response?.data || err.message);
+
     res.status(500).json({ error: "DeepSeek API Error" });
+
   }
+
 });
 
 /* =========================
