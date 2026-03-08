@@ -29,6 +29,7 @@ ENV CONFIG
 
 const API_KEY = process.env.POST_API_KEY;
 const GEMINI_KEY = process.env.GEMINI_API_KEY;
+console.log("Gemini key loaded:", !!GEMINI_KEY);
 const INTERNAL_KEY = process.env.INTERNAL_KEY || "88ENG2025";
 
 if (!API_KEY) {
@@ -346,4 +347,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
-
