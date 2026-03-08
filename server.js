@@ -189,8 +189,7 @@ function checkAuth(req, res) {
 INFO ROUTE
 ========================= */
 
-app.post("/info", upload.array("images", 5), async (req, res) => {
-
+app.post("/info", upload.any(), async (req, res) => {
   try {
 
     if (!checkAuth(req, res)) return;
@@ -235,8 +234,7 @@ ${description}
 POST ROUTE
 ========================= */
 
-app.post("/post", upload.array("images", 5), async (req, res) => {
-
+app.post("/post", upload.any(), async (req, res) => {
   try {
 
     if (!checkAuth(req, res)) return;
@@ -281,8 +279,7 @@ ${description}
 CHECK MACHINE
 ========================= */
 
-app.post("/check", upload.array("images", 5), async (req, res) => {
-
+app.post("/check", upload.any(), async (req, res) => {
   try {
 
     if (!checkAuth(req, res)) return;
