@@ -149,17 +149,19 @@ PROCESS MULTIPLE IMAGES
 async function processImages(files) {
 
   let description = "";
-  let previews = [];
+  const previews = new Array(files.length);
 
   if (!files || files.length === 0)
-    return { description, previews };
+    return { description, previews: [] };
 
   const tasks = files.map(async (file, index) => {
 
     const base64 = file.buffer.toString("base64");
     const mimeType = file.mimetype;
 
-    previews.push(`data:${mimeType};base64,${base64}`);
+    previews[index] = `data:${mimeType};base64,${base64}`;
+
+    console.log("Gemini analyzing image", index + 1);
 
     const desc = await analyzeImage(base64, mimeType);
 
