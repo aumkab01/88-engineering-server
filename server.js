@@ -113,8 +113,7 @@ async function analyzeImage(base64, mimeType) {
             role: "user",
             parts: [
               {
-                text: "Describe what you see in this image. Focus on dishwasher machines, pumps, motors, heating elements, control panels and error codes."
-              },
+                text: "You are analyzing a photo from a dishwasher repair technician. Identify what machine parts or components appear in the image. Describe the machine, panels, pumps, motors, heating elements, pipes, or visible issues."              },
               {
                 inlineData: {
                   mimeType: mimeType,
@@ -163,6 +162,8 @@ async function processImages(files) {
     previews.push(`data:${mimeType};base64,${base64}`);
 
     const desc = await analyzeImage(base64, mimeType);
+
+    console.log("Image analysis:", desc);
 
     if (!desc) {
       return `Image ${index + 1}: Unable to analyze image`;
@@ -343,3 +344,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
