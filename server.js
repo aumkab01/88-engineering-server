@@ -93,14 +93,13 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
   );
 
   return response.data.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
-
 }
 
 /* =========================
 GEMINI IMAGE ANALYSIS
 ========================= */
 
-async function analyzeImage(base64) {
+async function analyzeImage(base64, mimeType) {
 
   if (!GEMINI_KEY) return "";
 
@@ -111,13 +110,14 @@ async function analyzeImage(base64) {
       {
         contents: [
           {
+            role: "user",
             parts: [
               {
-                text: "Describe this image briefly. Focus on machines, control panels, mechanical parts, and error displays."
+                text: "Describe what you see in this image. Focus on dishwasher machines, pumps, motors, heating elements, control panels and error codes."
               },
               {
                 inlineData: {
-                  mimeType: "image/jpeg",
+                  mimeType: mimeType,
                   data: base64
                 }
               }
@@ -127,11 +127,16 @@ async function analyzeImage(base64) {
       }
     );
 
-    return response.data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const text =
+      response.data?.candidates?.[0]?.content?.parts
+        ?.map(p => p.text)
+        .join(" ") || "";
+
+    return text;
 
   } catch (err) {
 
-    console.log("Gemini error:", err.message);
+    console.log("Gemini error:", err.response?.data || err.message);
     return "";
 
   }
@@ -153,10 +158,15 @@ async function processImages(files) {
   const tasks = files.map(async (file, index) => {
 
     const base64 = file.buffer.toString("base64");
+    const mimeType = file.mimetype;
 
-    previews.push(`data:${file.mimetype};base64,${base64}`);
+    previews.push(`data:${mimeType};base64,${base64}`);
 
-    const desc = await analyzeImage(base64);
+    const desc = await analyzeImage(base64, mimeType);
+
+    if (!desc) {
+      return `Image ${index + 1}: Unable to analyze image`;
+    }
 
     return `Image ${index + 1}: ${desc}`;
 
@@ -190,12 +200,13 @@ INFO ROUTE
 ========================= */
 
 app.post("/info", upload.any(), async (req, res) => {
+
   try {
 
     if (!checkAuth(req, res)) return;
 
     const message = req.body.message || "";
-    const files = req.files;
+    const files = req.files || [];
 
     const { description, previews } = await processImages(files);
 
@@ -235,12 +246,13 @@ POST ROUTE
 ========================= */
 
 app.post("/post", upload.any(), async (req, res) => {
+
   try {
 
     if (!checkAuth(req, res)) return;
 
     const message = req.body.message || "";
-    const files = req.files;
+    const files = req.files || [];
 
     const { description, previews } = await processImages(files);
 
@@ -280,23 +292,26 @@ CHECK MACHINE
 ========================= */
 
 app.post("/check", upload.any(), async (req, res) => {
+
   try {
 
     if (!checkAuth(req, res)) return;
 
     const message = req.body.message || "";
-    const files = req.files;
+    const files = req.files || [];
 
     const { description, previews } = await processImages(files);
 
     const systemPrompt = `
-คุณคือผู้ช่วยช่างเครื่องล้างจาน
-ให้วิเคราะห์อาการจากข้อมูลและรูปภาพ
-ตอบแบบช่างเทคนิค
+คุณคือผู้ช่วยช่างเครื่องล้างจานเชิงเทคนิค
+ให้วิเคราะห์จากอาการและรูปภาพ
+ตอบแบบช่างจริง
+บอกสาเหตุที่เป็นไปได้
+และขั้นตอนตรวจเช็ค
 `;
 
     const finalInput = `
-User Problem:
+Machine Problem:
 ${message}
 
 Images Context:
