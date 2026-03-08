@@ -14,6 +14,10 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
 
+/* =========================
+UPLOAD CONFIG
+========================= */
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }
@@ -57,7 +61,7 @@ function loadFileSafe(filePath) {
 }
 
 /* =========================
-LOAD DATA
+LOAD DATA FILES
 ========================= */
 
 const companyData = loadFileSafe("data/company.txt");
@@ -88,7 +92,7 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
     }
   );
 
-  return response.data.choices[0].message.content;
+  return response.data.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
 
 }
 
@@ -100,28 +104,37 @@ async function analyzeImage(base64) {
 
   if (!GEMINI_KEY) return "";
 
-  const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
-    {
-      contents: [
-        {
-          parts: [
-            {
-              text: "Describe this image briefly. Focus on machines, control panels, mechanical parts, and error displays."
-            },
-            {
-              inlineData: {
-                mimeType: "image/jpeg",
-                data: base64
-              }
-            }
-          ]
-        }
-      ]
-    }
-  );
+  try {
 
-  return response.data.candidates[0].content.parts[0].text;
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+      {
+        contents: [
+          {
+            parts: [
+              {
+                text: "Describe this image briefly. Focus on machines, control panels, mechanical parts, and error displays."
+              },
+              {
+                inlineData: {
+                  mimeType: "image/jpeg",
+                  data: base64
+                }
+              }
+            ]
+          }
+        ]
+      }
+    );
+
+    return response.data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+  } catch (err) {
+
+    console.log("Gemini error:", err.message);
+    return "";
+
+  }
 
 }
 
@@ -137,17 +150,21 @@ async function processImages(files) {
   if (!files || files.length === 0)
     return { description, previews };
 
-  for (let i = 0; i < files.length; i++) {
+  const tasks = files.map(async (file, index) => {
 
-    const base64 = files[i].buffer.toString("base64");
+    const base64 = file.buffer.toString("base64");
 
-    previews.push(`data:${files[i].mimetype};base64,${base64}`);
+    previews.push(`data:${file.mimetype};base64,${base64}`);
 
     const desc = await analyzeImage(base64);
 
-    description += `Image ${i + 1}: ${desc}\n`;
+    return `Image ${index + 1}: ${desc}`;
 
-  }
+  });
+
+  const results = await Promise.all(tasks);
+
+  description = results.join("\n");
 
   return { description, previews };
 
@@ -169,7 +186,7 @@ function checkAuth(req, res) {
 }
 
 /* =========================
-INFO
+INFO ROUTE
 ========================= */
 
 app.post("/info", upload.array("images", 5), async (req, res) => {
@@ -178,7 +195,7 @@ app.post("/info", upload.array("images", 5), async (req, res) => {
 
     if (!checkAuth(req, res)) return;
 
-    const message = req.body.message;
+    const message = req.body.message || "";
     const files = req.files;
 
     const { description, previews } = await processImages(files);
@@ -207,7 +224,7 @@ ${description}
 
   } catch (err) {
 
-    console.log(err.message);
+    console.error("INFO ERROR:", err);
     res.status(500).json({ error: "AI Error" });
 
   }
@@ -215,7 +232,7 @@ ${description}
 });
 
 /* =========================
-POST
+POST ROUTE
 ========================= */
 
 app.post("/post", upload.array("images", 5), async (req, res) => {
@@ -224,7 +241,7 @@ app.post("/post", upload.array("images", 5), async (req, res) => {
 
     if (!checkAuth(req, res)) return;
 
-    const message = req.body.message;
+    const message = req.body.message || "";
     const files = req.files;
 
     const { description, previews } = await processImages(files);
@@ -253,7 +270,7 @@ ${description}
 
   } catch (err) {
 
-    console.log(err.message);
+    console.error("POST ERROR:", err);
     res.status(500).json({ error: "AI Error" });
 
   }
@@ -270,14 +287,15 @@ app.post("/check", upload.array("images", 5), async (req, res) => {
 
     if (!checkAuth(req, res)) return;
 
-    const message = req.body.message;
+    const message = req.body.message || "";
     const files = req.files;
 
     const { description, previews } = await processImages(files);
 
     const systemPrompt = `
 คุณคือผู้ช่วยช่างเครื่องล้างจาน
-ให้วิเคราะห์อาการและแนะนำการตรวจสอบ
+ให้วิเคราะห์อาการจากข้อมูลและรูปภาพ
+ตอบแบบช่างเทคนิค
 `;
 
     const finalInput = `
@@ -297,7 +315,7 @@ ${description}
 
   } catch (err) {
 
-    console.log(err.message);
+    console.error("CHECK ERROR:", err);
     res.status(500).json({ error: "AI Error" });
 
   }
