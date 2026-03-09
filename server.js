@@ -39,7 +39,7 @@ if (!API_KEY) {
 CONFIG
 ========================= */
 
-const MAX_PROMPT_LENGTH = 15000;
+const MAX_PROMPT_LENGTH = Infinity;
 
 /* =========================
 BASIC ROUTES
@@ -357,5 +357,6 @@ app.listen(PORT, () => {
   console.log("=================================");
 
 });
+
 
 
