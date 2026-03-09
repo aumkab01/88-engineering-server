@@ -178,7 +178,7 @@ DEEPSEEK CALL
 
 async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
 
-  const MAX_PROMPT = 15000;
+  const MAX_PROMPT = Infinity;
 
   if(systemPrompt.length > MAX_PROMPT){
     console.log("⚠ prompt trimmed");
@@ -202,7 +202,6 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
           Authorization: `Bearer ${API_KEY}`,
           "Content-Type": "application/json"
         },
-        timeout: 30000
       }
     );
 
@@ -358,4 +357,5 @@ app.listen(PORT, () => {
   console.log("=================================");
 
 });
+
 
