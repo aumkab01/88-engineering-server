@@ -28,7 +28,7 @@ ENV CONFIG
 ========================= */
 
 const API_KEY = process.env.POST_API_KEY;
-const VISION_KEY = process.env.VISION_KEY;
+const HF_KEY = process.env.HF_API_KEY;
 const INTERNAL_KEY = process.env.INTERNAL_KEY || "88ENG2025";
 
 if (!API_KEY) {
@@ -49,7 +49,7 @@ app.get("/health", (req, res) => {
 });
 
 /* =========================
-SAFE FILE LOADER
+LOAD FILE SAFE
 ========================= */
 
 function loadFileSafe(filePath) {
@@ -60,16 +60,12 @@ function loadFileSafe(filePath) {
   }
 }
 
-/* =========================
-LOAD DATA FILES
-========================= */
-
 const companyData = loadFileSafe("data/company.txt");
 const promptInfo = loadFileSafe("data/prompt-info.txt");
 const promptPost = loadFileSafe("data/prompt-post.txt");
 
 /* =========================
-CALL DEEPSEEK (TEXT AI)
+CALL DEEPSEEK
 ========================= */
 
 async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
@@ -86,8 +82,8 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`
+        Authorization: `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
       }
     }
   );
@@ -96,66 +92,10 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
 }
 
 /* =========================
-IMAGE ANALYSIS (OPENROUTER)
+VISION AI (HUGGINGFACE)
 ========================= */
 
-async function analyzeImage(base64, mimeType) {
-
-  if (!VISION_KEY) return "";
-
-  try {
-
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "qwen/qwen2.5-vl-72b-instruct",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: "Analyze this commercial dishwasher repair photo. Identify visible machine parts, pumps, motors, heating elements, pipes, panels or possible damage."
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: `data:${mimeType};base64,${base64}`
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${VISION_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    const text =
-      response.data?.choices?.[0]?.message?.content || "";
-
-    return text;
-
-  } catch (err) {
-
-    console.log("Vision error:", err.response?.data || err.message);
-    return "";
-
-  }
-
-}
-
-/* =========================
-PROCESS IMAGES
-========================= */
-
-async function analyzeImage(base64, mimeType) {
-
-  const HF_KEY = process.env.HF_API_KEY;
+async function analyzeImage(buffer) {
 
   if (!HF_KEY) return "";
 
@@ -163,13 +103,11 @@ async function analyzeImage(base64, mimeType) {
 
     const response = await axios.post(
       "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
-      {
-        inputs: base64
-      },
+      buffer,
       {
         headers: {
           Authorization: `Bearer ${HF_KEY}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/octet-stream"
         }
       }
     );
@@ -190,6 +128,44 @@ async function analyzeImage(base64, mimeType) {
     return "";
 
   }
+
+}
+
+/* =========================
+PROCESS IMAGES
+========================= */
+
+async function processImages(files) {
+
+  let description = "";
+  const previews = [];
+
+  if (!files || files.length === 0)
+    return { description, previews };
+
+  const tasks = files.map(async (file, index) => {
+
+    console.log("Analyzing image", index + 1);
+
+    const desc = await analyzeImage(file.buffer);
+
+    previews.push(
+      `data:${file.mimetype};base64,${file.buffer.toString("base64")}`
+    );
+
+    if (!desc)
+      return `Image ${index + 1}: cannot analyze`;
+
+    return `Image ${index + 1}: ${desc}`;
+
+  });
+
+  const results = await Promise.all(tasks);
+
+  description = results.join("\n");
+
+  return { description, previews };
+
 }
 
 /* =========================
@@ -355,4 +331,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
-
