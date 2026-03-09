@@ -97,38 +97,34 @@ VISION AI (HUGGINGFACE)
 
 async function analyzeImage(buffer) {
 
-  if (!HF_KEY) return "";
-
   try {
 
-    const response = await axios({
-      method: "POST",
-      url: "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
-      data: buffer,
-      headers: {
-        Authorization: `Bearer ${HF_KEY}`,
-        "Content-Type": "application/octet-stream"
+    const base64 = buffer.toString("base64");
+
+    const response = await axios.post(
+      "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
+      {
+        inputs: base64
       },
-      timeout: 60000
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HF_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
-    const result = response.data;
+    console.log("HF RESULT:", response.data);
 
-    console.log("Vision result:", result);
-
-    if (Array.isArray(result) && result.length > 0) {
-      return result[0].generated_text || "";
-    }
-
-    return "";
+    return response.data?.[0]?.generated_text || "";
 
   } catch (err) {
 
-    console.log("Vision error:", err.response?.data || err.message);
+    console.log("HF ERROR:", err.response?.data || err.message);
+
     return "";
 
   }
-
 }
 
 /* =========================
@@ -330,6 +326,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
 
 
 
