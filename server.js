@@ -109,7 +109,7 @@ async function analyzeImage(buffer) {
         Authorization: `Bearer ${HF_KEY}`,
         "Content-Type": "application/octet-stream"
       },
-      timeout: 20000
+      timeout: 30000
     });
 
     const result = response.data;
@@ -128,6 +128,7 @@ async function analyzeImage(buffer) {
     return "";
 
   }
+
 }
 
 /* =========================
@@ -329,5 +330,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
 
 
