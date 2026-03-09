@@ -28,8 +28,7 @@ ENV CONFIG
 ========================= */
 
 const API_KEY = process.env.POST_API_KEY;
-const GEMINI_KEY = process.env.GEMINI_API_KEY;
-console.log("Gemini key loaded:", !!GEMINI_KEY);
+const VISION_KEY = process.env.VISION_KEY;
 const INTERNAL_KEY = process.env.INTERNAL_KEY || "88ENG2025";
 
 if (!API_KEY) {
@@ -70,7 +69,7 @@ const promptInfo = loadFileSafe("data/prompt-info.txt");
 const promptPost = loadFileSafe("data/prompt-post.txt");
 
 /* =========================
-CALL DEEPSEEK
+CALL DEEPSEEK (TEXT AI)
 ========================= */
 
 async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
@@ -97,46 +96,53 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
 }
 
 /* =========================
-GEMINI IMAGE ANALYSIS
+IMAGE ANALYSIS (OPENROUTER)
 ========================= */
 
 async function analyzeImage(base64, mimeType) {
 
-  if (!GEMINI_KEY) return "";
+  if (!VISION_KEY) return "";
 
   try {
 
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+      "https://openrouter.ai/api/v1/chat/completions",
       {
-        contents: [
+        model: "qwen/qwen2.5-vl-72b-instruct",
+        messages: [
           {
             role: "user",
-            parts: [
+            content: [
               {
-                text: "You are analyzing a photo from a dishwasher repair technician. Identify what machine parts or components appear in the image. Describe the machine, panels, pumps, motors, heating elements, pipes, or visible issues."              },
+                type: "text",
+                text: "Analyze this commercial dishwasher repair photo. Identify visible machine parts, pumps, motors, heating elements, pipes, panels or possible damage."
+              },
               {
-                inlineData: {
-                  mimeType: mimeType,
-                  data: base64
+                type: "image_url",
+                image_url: {
+                  url: `data:${mimeType};base64,${base64}`
                 }
               }
             ]
           }
         ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${VISION_KEY}`,
+          "Content-Type": "application/json"
+        }
       }
     );
 
     const text =
-      response.data?.candidates?.[0]?.content?.parts
-        ?.map(p => p.text)
-        .join(" ") || "";
+      response.data?.choices?.[0]?.message?.content || "";
 
     return text;
 
   } catch (err) {
 
-    console.log("Gemini error:", err.response?.data || err.message);
+    console.log("Vision error:", err.response?.data || err.message);
     return "";
 
   }
@@ -144,7 +150,7 @@ async function analyzeImage(base64, mimeType) {
 }
 
 /* =========================
-PROCESS MULTIPLE IMAGES
+PROCESS IMAGES
 ========================= */
 
 async function processImages(files) {
@@ -162,7 +168,7 @@ async function processImages(files) {
 
     previews[index] = `data:${mimeType};base64,${base64}`;
 
-    console.log("Gemini analyzing image", index + 1);
+    console.log("Analyzing image", index + 1);
 
     const desc = await analyzeImage(base64, mimeType);
 
