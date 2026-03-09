@@ -28,7 +28,6 @@ ENV CONFIG
 ========================= */
 
 const API_KEY = process.env.POST_API_KEY;
-const HF_KEY = process.env.HF_API_KEY;
 const INTERNAL_KEY = process.env.INTERNAL_KEY || "88ENG2025";
 
 if (!API_KEY) {
@@ -49,7 +48,7 @@ app.get("/health", (req, res) => {
 });
 
 /* =========================
-SAFE FILE LOADER
+SAFE FILE LOAD
 ========================= */
 
 function loadFileSafe(filePath) {
@@ -60,9 +59,57 @@ function loadFileSafe(filePath) {
   }
 }
 
+/* =========================
+LOAD TXT FROM FOLDER
+========================= */
+
+function loadFolderTxt(folderPath) {
+
+  try {
+
+    const fullPath = path.join(__dirname, folderPath);
+
+    if (!fs.existsSync(fullPath)) return "";
+
+    const files = fs.readdirSync(fullPath)
+      .filter(f => f.endsWith(".txt"));
+
+    let combined = "";
+
+    for (const file of files) {
+
+      const content = fs.readFileSync(
+        path.join(fullPath, file),
+        "utf8"
+      );
+
+      combined += "\n" + content;
+
+    }
+
+    return combined;
+
+  } catch {
+
+    return "";
+
+  }
+
+}
+
+/* =========================
+LOAD DATA
+========================= */
+
 const companyData = loadFileSafe("data/company.txt");
+
+const infoData = loadFolderTxt("data/INFO");
+const postData = loadFolderTxt("data/POST");
+const techData = loadFolderTxt("data/CHEAK");
+
 const promptInfo = loadFileSafe("data/prompt-info.txt");
 const promptPost = loadFileSafe("data/prompt-post.txt");
+const promptTech = loadFileSafe("data/prompt-tech.txt");
 
 /* =========================
 CALL DEEPSEEK
@@ -89,79 +136,7 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
   );
 
   return response.data?.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
-}
 
-/* =========================
-VISION AI (HUGGINGFACE)
-========================= */
-
-async function analyzeImage(buffer) {
-
-  try {
-
-    const base64 = buffer.toString("base64");
-
-    const response = await axios.post(
-      "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
-      {
-        inputs: base64
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.HF_API_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    console.log("HF RESULT:", response.data);
-
-    return response.data?.[0]?.generated_text || "";
-
-  } catch (err) {
-
-    console.log("HF ERROR:", err.response?.data || err.message);
-
-    return "";
-
-  }
-}
-
-/* =========================
-PROCESS IMAGES
-========================= */
-
-async function processImages(files) {
-
-  if (!files || files.length === 0) {
-    return { description: "", previews: [] };
-  }
-
-  const previews = new Array(files.length);
-
-  const tasks = files.map(async (file, index) => {
-
-    console.log("Analyzing image", index + 1);
-
-    const desc = await analyzeImage(file.buffer);
-
-    previews[index] =
-      `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
-
-    if (!desc) {
-      return `Image ${index + 1}: unable to analyze`;
-    }
-
-    return `Image ${index + 1}: ${desc}`;
-
-  });
-
-  const results = await Promise.all(tasks);
-
-  return {
-    description: results.join("\n"),
-    previews
-  };
 }
 
 /* =========================
@@ -176,6 +151,7 @@ function checkAuth(req, res) {
   }
 
   return true;
+
 }
 
 /* =========================
@@ -189,31 +165,18 @@ app.post("/info", upload.any(), async (req, res) => {
     if (!checkAuth(req, res)) return;
 
     const message = req.body.message || "";
-    const files = req.files || [];
-
-    const { description, previews } = await processImages(files);
 
     const systemPrompt = `
-${promptInfo}
-
-Company Info
 ${companyData}
+
+${infoData}
+
+${promptInfo}
 `;
 
-    const finalInput = `
-User Question:
-${message}
+    const reply = await callDeepseek(systemPrompt, message, 0.3);
 
-Images Context:
-${description}
-`;
-
-    const reply = await callDeepseek(systemPrompt, finalInput, 0.3);
-
-    res.json({
-      reply,
-      images: previews
-    });
+    res.json({ reply });
 
   } catch (err) {
 
@@ -235,31 +198,18 @@ app.post("/post", upload.any(), async (req, res) => {
     if (!checkAuth(req, res)) return;
 
     const message = req.body.message || "";
-    const files = req.files || [];
-
-    const { description, previews } = await processImages(files);
 
     const systemPrompt = `
-${promptPost}
-
-Company Info
 ${companyData}
+
+${postData}
+
+${promptPost}
 `;
 
-    const finalInput = `
-User Request:
-${message}
+    const reply = await callDeepseek(systemPrompt, message, 0.5);
 
-Images Context:
-${description}
-`;
-
-    const reply = await callDeepseek(systemPrompt, finalInput, 0.5);
-
-    res.json({
-      reply,
-      images: previews
-    });
+    res.json({ reply });
 
   } catch (err) {
 
@@ -271,7 +221,7 @@ ${description}
 });
 
 /* =========================
-CHECK MACHINE
+TECH ROUTE
 ========================= */
 
 app.post("/check", upload.any(), async (req, res) => {
@@ -281,32 +231,18 @@ app.post("/check", upload.any(), async (req, res) => {
     if (!checkAuth(req, res)) return;
 
     const message = req.body.message || "";
-    const files = req.files || [];
-
-    const { description, previews } = await processImages(files);
 
     const systemPrompt = `
-คุณคือผู้ช่วยช่างเครื่องล้างจานเชิงเทคนิค
-ให้วิเคราะห์จากอาการและรูปภาพ
-ตอบแบบช่างจริง
-บอกสาเหตุที่เป็นไปได้
-และขั้นตอนตรวจเช็ค
+${companyData}
+
+${techData}
+
+${promptTech}
 `;
 
-    const finalInput = `
-Machine Problem:
-${message}
+    const reply = await callDeepseek(systemPrompt, message, 0.2);
 
-Images Context:
-${description}
-`;
-
-    const reply = await callDeepseek(systemPrompt, finalInput, 0.2);
-
-    res.json({
-      reply,
-      images: previews
-    });
+    res.json({ reply });
 
   } catch (err) {
 
@@ -326,8 +262,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
-
-
-
-
-
