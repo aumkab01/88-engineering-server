@@ -153,51 +153,43 @@ async function analyzeImage(base64, mimeType) {
 PROCESS IMAGES
 ========================= */
 
-async function processImages(images) {
+async function analyzeImage(base64, mimeType) {
 
-  const results = [];
+  const HF_KEY = process.env.HF_API_KEY;
 
-  for (let i = 0; i < images.length; i++) {
+  if (!HF_KEY) return "";
 
-    console.log("Analyzing image", i + 1);
+  try {
 
-    try {
-
-      const response = await fetch(
-        "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${process.env.HF_API_KEY}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            inputs: images[i]
-          })
+    const response = await axios.post(
+      "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
+      {
+        inputs: base64
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${HF_KEY}`,
+          "Content-Type": "application/json"
         }
-      );
-
-      const data = await response.json();
-
-      console.log("Vision result:", data);
-
-      if (Array.isArray(data) && data[0]?.generated_text) {
-        results.push(data[0].generated_text);
-      } else {
-        results.push("No description");
       }
+    );
 
-    } catch (error) {
+    const result = response.data;
 
-      console.error("Vision error:", error);
-      results.push("Vision error");
+    console.log("Vision result:", result);
 
+    if (Array.isArray(result) && result[0]?.generated_text) {
+      return result[0].generated_text;
     }
 
+    return "";
+
+  } catch (err) {
+
+    console.log("Vision error:", err.response?.data || err.message);
+    return "";
+
   }
-
-  return results.join("\n");
-
 }
 
 /* =========================
@@ -363,3 +355,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
