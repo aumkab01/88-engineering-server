@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 app.use(express.static("public"));
 
@@ -62,10 +62,11 @@ function loadFileSafe(filePath) {
 }
 
 /* =========================
-LOAD ALL TXT FROM FOLDER
+LOAD TXT RECURSIVE
+อ่านไฟล์ใน subfolder ได้
 ========================= */
 
-function loadFolderTxt(folderPath) {
+function loadFolderTxtRecursive(folderPath) {
 
   const fullPath = path.join(__dirname, folderPath);
 
@@ -74,29 +75,42 @@ function loadFolderTxt(folderPath) {
     return "";
   }
 
-  const files = fs.readdirSync(fullPath)
-    .filter(file => file.endsWith(".txt"))
-    .sort();
-
   let combined = "";
 
-  for (const file of files) {
+  function readDir(dir) {
 
-    const filePath = path.join(fullPath, file);
+    const items = fs.readdirSync(dir);
 
-    try {
+    for (const item of items) {
 
-      const content = fs.readFileSync(filePath, "utf8");
+      const itemPath = path.join(dir, item);
+      const stat = fs.statSync(itemPath);
 
-      combined += `\n\n===== ${file} =====\n\n${content}`;
+      if (stat.isDirectory()) {
 
-    } catch (err) {
+        readDir(itemPath);
 
-      console.log("⚠ read error:", file);
+      } else if (item.endsWith(".txt")) {
+
+        try {
+
+          const content = fs.readFileSync(itemPath, "utf8");
+
+          combined += `\n\n===== ${item} =====\n\n${content}`;
+
+        } catch (err) {
+
+          console.log("⚠ read error:", item);
+
+        }
+
+      }
 
     }
 
   }
+
+  readDir(fullPath);
 
   return combined;
 
@@ -110,11 +124,11 @@ console.log("Loading knowledge base...");
 
 const companyData = loadFileSafe("data/company.txt");
 
-const infoData = loadFolderTxt("data/INFO");
-const postData = loadFolderTxt("data/POST");
+const infoData = loadFolderTxtRecursive("data/INFO");
+const postData = loadFolderTxtRecursive("data/POST");
 
-/* ⭐ ตรงนี้คือสิ่งที่คุณถาม */
-const checkData = loadFolderTxt("data/CHEAK");
+/* เปลี่ยนจาก CHEAK → TECH */
+const techData = loadFolderTxtRecursive("data/TECH");
 
 const promptInfo = loadFileSafe("data/prompt-info.txt");
 const promptPost = loadFileSafe("data/prompt-post.txt");
@@ -144,7 +158,8 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
         headers: {
           Authorization: `Bearer ${API_KEY}`,
           "Content-Type": "application/json"
-        }
+        },
+        timeout: 60000
       }
     );
 
@@ -232,10 +247,10 @@ ${promptPost}
 });
 
 /* =========================
-CHECK ROUTE (TECH AI)
+TECH ROUTE
 ========================= */
 
-app.post("/check", upload.any(), async (req, res) => {
+app.post("/tech", upload.any(), async (req, res) => {
 
   if (!checkAuth(req, res)) return;
 
@@ -244,7 +259,7 @@ app.post("/check", upload.any(), async (req, res) => {
   const systemPrompt = `
 ${companyData}
 
-${checkData}
+${techData}
 
 ${promptTech}
 `;
