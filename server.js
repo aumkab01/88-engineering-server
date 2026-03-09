@@ -153,40 +153,50 @@ async function analyzeImage(base64, mimeType) {
 PROCESS IMAGES
 ========================= */
 
-async function processImages(files) {
+async function processImages(images) {
 
-  let description = "";
-  const previews = new Array(files.length);
+  const results = [];
 
-  if (!files || files.length === 0)
-    return { description, previews: [] };
+  for (let i = 0; i < images.length; i++) {
 
-  const tasks = files.map(async (file, index) => {
+    console.log("Analyzing image", i + 1);
 
-    const base64 = file.buffer.toString("base64");
-    const mimeType = file.mimetype;
+    try {
 
-    previews[index] = `data:${mimeType};base64,${base64}`;
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${process.env.HF_API_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            inputs: images[i]
+          })
+        }
+      );
 
-    console.log("Analyzing image", index + 1);
+      const data = await response.json();
 
-    const desc = await analyzeImage(base64, mimeType);
+      console.log("Vision result:", data);
 
-    console.log("Image analysis:", desc);
+      if (Array.isArray(data) && data[0]?.generated_text) {
+        results.push(data[0].generated_text);
+      } else {
+        results.push("No description");
+      }
 
-    if (!desc) {
-      return `Image ${index + 1}: Unable to analyze image`;
+    } catch (error) {
+
+      console.error("Vision error:", error);
+      results.push("Vision error");
+
     }
 
-    return `Image ${index + 1}: ${desc}`;
+  }
 
-  });
-
-  const results = await Promise.all(tasks);
-
-  description = results.join("\n");
-
-  return { description, previews };
+  return results.join("\n");
 
 }
 
