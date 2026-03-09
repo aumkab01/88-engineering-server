@@ -178,14 +178,21 @@ DEEPSEEK CALL
 
 async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
 
-  try {
+  const MAX_PROMPT = 15000;
+
+  if(systemPrompt.length > MAX_PROMPT){
+    console.log("⚠ prompt trimmed");
+    systemPrompt = systemPrompt.slice(-MAX_PROMPT);
+  }
+
+  try{
 
     const response = await axios.post(
       "https://api.deepseek.com/chat/completions",
       {
         model: "deepseek-chat",
         messages: [
-          { role: "system", content: trimPrompt(systemPrompt) },
+          { role: "system", content: systemPrompt },
           { role: "user", content: userInput }
         ],
         temperature: temp
@@ -201,13 +208,13 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
 
     return response.data?.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
 
-  } catch (err) {
+  }catch(err){
 
     console.log("❌ DeepSeek error");
 
-    if (err.response) {
+    if(err.response){
       console.log(err.response.data);
-    } else {
+    }else{
       console.log(err.message);
     }
 
@@ -351,3 +358,4 @@ app.listen(PORT, () => {
   console.log("=================================");
 
 });
+
