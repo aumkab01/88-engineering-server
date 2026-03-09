@@ -140,8 +140,9 @@ async function processImages(files) {
   let description = "";
   const previews = [];
 
-  if (!files || files.length === 0)
-    return { description, previews };
+  if (!files || files.length === 0) {
+    return { description: "", previews: [] };
+  }
 
   const tasks = files.map(async (file, index) => {
 
@@ -153,19 +154,21 @@ async function processImages(files) {
       `data:${file.mimetype};base64,${file.buffer.toString("base64")}`
     );
 
-    if (!desc)
+    if (!desc) {
       return `Image ${index + 1}: cannot analyze`;
+    }
 
     return `Image ${index + 1}: ${desc}`;
-
   });
 
   const results = await Promise.all(tasks);
 
   description = results.join("\n");
 
-  return { description, previews };
-
+  return {
+    description,
+    previews
+  };
 }
 
 /* =========================
