@@ -49,7 +49,7 @@ app.get("/health", (req, res) => {
 });
 
 /* =========================
-LOAD FILE SAFE
+SAFE FILE LOADER
 ========================= */
 
 function loadFileSafe(filePath) {
@@ -88,7 +88,7 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
     }
   );
 
-  return response.data.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
+  return response.data?.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
 }
 
 /* =========================
@@ -101,23 +101,23 @@ async function analyzeImage(buffer) {
 
   try {
 
-    const response = await axios.post(
-      "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
-      buffer,
-      {
-        headers: {
-          Authorization: `Bearer ${HF_KEY}`,
-          "Content-Type": "application/octet-stream"
-        }
-      }
-    );
+    const response = await axios({
+      method: "POST",
+      url: "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
+      data: buffer,
+      headers: {
+        Authorization: `Bearer ${HF_KEY}`,
+        "Content-Type": "application/octet-stream"
+      },
+      timeout: 20000
+    });
 
     const result = response.data;
 
     console.log("Vision result:", result);
 
-    if (Array.isArray(result) && result[0]?.generated_text) {
-      return result[0].generated_text;
+    if (Array.isArray(result) && result.length > 0) {
+      return result[0].generated_text || "";
     }
 
     return "";
@@ -128,7 +128,6 @@ async function analyzeImage(buffer) {
     return "";
 
   }
-
 }
 
 /* =========================
@@ -137,12 +136,11 @@ PROCESS IMAGES
 
 async function processImages(files) {
 
-  let description = "";
-  const previews = [];
-
   if (!files || files.length === 0) {
     return { description: "", previews: [] };
   }
+
+  const previews = new Array(files.length);
 
   const tasks = files.map(async (file, index) => {
 
@@ -150,23 +148,21 @@ async function processImages(files) {
 
     const desc = await analyzeImage(file.buffer);
 
-    previews.push(
-      `data:${file.mimetype};base64,${file.buffer.toString("base64")}`
-    );
+    previews[index] =
+      `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
 
     if (!desc) {
-      return `Image ${index + 1}: cannot analyze`;
+      return `Image ${index + 1}: unable to analyze`;
     }
 
     return `Image ${index + 1}: ${desc}`;
+
   });
 
   const results = await Promise.all(tasks);
 
-  description = results.join("\n");
-
   return {
-    description,
+    description: results.join("\n"),
     previews
   };
 }
@@ -183,7 +179,6 @@ function checkAuth(req, res) {
   }
 
   return true;
-
 }
 
 /* =========================
