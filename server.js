@@ -31,9 +31,15 @@ const API_KEY = process.env.POST_API_KEY;
 const INTERNAL_KEY = process.env.INTERNAL_KEY || "88ENG2025";
 
 if (!API_KEY) {
-  console.error("POST_API_KEY not found");
+  console.error("❌ POST_API_KEY not found in ENV");
   process.exit(1);
 }
+
+/* =========================
+CONFIG
+========================= */
+
+const MAX_PROMPT_LENGTH = 15000;
 
 /* =========================
 BASIC ROUTES
@@ -52,11 +58,25 @@ SAFE FILE LOAD
 ========================= */
 
 function loadFileSafe(filePath) {
+
   try {
-    return fs.readFileSync(path.join(__dirname, filePath), "utf8");
-  } catch {
+
+    const full = path.join(__dirname, filePath);
+
+    if (!fs.existsSync(full)) {
+      console.log("⚠ file missing:", filePath);
+      return "";
+    }
+
+    return fs.readFileSync(full, "utf8");
+
+  } catch (err) {
+
+    console.log("⚠ file load error:", filePath);
     return "";
+
   }
+
 }
 
 /* =========================
@@ -69,28 +89,45 @@ function loadFolderTxt(folderPath) {
 
     const fullPath = path.join(__dirname, folderPath);
 
-    if (!fs.existsSync(fullPath)) return "";
+    if (!fs.existsSync(fullPath)) {
+      console.log("⚠ folder missing:", folderPath);
+      return "";
+    }
 
     const files = fs.readdirSync(fullPath)
-      .filter(f => f.endsWith(".txt"));
+      .filter(f => f.endsWith(".txt"))
+      .sort();
+
+    if (files.length === 0) {
+      console.log("⚠ no txt files:", folderPath);
+      return "";
+    }
 
     let combined = "";
 
     for (const file of files) {
 
-      const content = fs.readFileSync(
-        path.join(fullPath, file),
-        "utf8"
-      );
+      const filePath = path.join(fullPath, file);
 
-      combined += "\n" + content;
+      try {
+
+        const content = fs.readFileSync(filePath, "utf8");
+
+        combined += "\n\n" + content;
+
+      } catch {
+
+        console.log("⚠ read error:", file);
+
+      }
 
     }
 
     return combined;
 
-  } catch {
+  } catch (err) {
 
+    console.log("⚠ folder read error:", err.message);
     return "";
 
   }
@@ -98,8 +135,30 @@ function loadFolderTxt(folderPath) {
 }
 
 /* =========================
-LOAD DATA
+PROMPT LIMITER
 ========================= */
+
+function trimPrompt(text) {
+
+  if (!text) return "";
+
+  if (text.length > MAX_PROMPT_LENGTH) {
+
+    console.log("⚠ prompt trimmed");
+
+    return text.slice(0, MAX_PROMPT_LENGTH);
+
+  }
+
+  return text;
+
+}
+
+/* =========================
+LOAD KNOWLEDGE
+========================= */
+
+console.log("Loading knowledge base...");
 
 const companyData = loadFileSafe("data/company.txt");
 
@@ -111,31 +170,50 @@ const promptInfo = loadFileSafe("data/prompt-info.txt");
 const promptPost = loadFileSafe("data/prompt-post.txt");
 const promptTech = loadFileSafe("data/prompt-tech.txt");
 
+console.log("Knowledge loaded");
+
 /* =========================
-CALL DEEPSEEK
+DEEPSEEK CALL
 ========================= */
 
 async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
 
-  const response = await axios.post(
-    "https://api.deepseek.com/chat/completions",
-    {
-      model: "deepseek-chat",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userInput }
-      ],
-      temperature: temp
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-      }
-    }
-  );
+  try {
 
-  return response.data?.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
+    const response = await axios.post(
+      "https://api.deepseek.com/chat/completions",
+      {
+        model: "deepseek-chat",
+        messages: [
+          { role: "system", content: trimPrompt(systemPrompt) },
+          { role: "user", content: userInput }
+        ],
+        temperature: temp
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        timeout: 30000
+      }
+    );
+
+    return response.data?.choices?.[0]?.message?.content || "AI ไม่สามารถตอบได้";
+
+  } catch (err) {
+
+    console.log("❌ DeepSeek error");
+
+    if (err.response) {
+      console.log(err.response.data);
+    } else {
+      console.log(err.message);
+    }
+
+    return "AI server error";
+
+  }
 
 }
 
@@ -146,8 +224,11 @@ AUTH
 function checkAuth(req, res) {
 
   if (req.headers["x-internal-key"] !== INTERNAL_KEY) {
+
     res.status(401).json({ error: "Unauthorized" });
+
     return false;
+
   }
 
   return true;
@@ -180,8 +261,9 @@ ${promptInfo}
 
   } catch (err) {
 
-    console.error("INFO ERROR:", err);
-    res.status(500).json({ error: "AI Error" });
+    console.log("INFO ROUTE ERROR:", err.message);
+
+    res.status(500).json({ error: "AI error" });
 
   }
 
@@ -213,8 +295,9 @@ ${promptPost}
 
   } catch (err) {
 
-    console.error("POST ERROR:", err);
-    res.status(500).json({ error: "AI Error" });
+    console.log("POST ROUTE ERROR:", err.message);
+
+    res.status(500).json({ error: "AI error" });
 
   }
 
@@ -246,19 +329,25 @@ ${promptTech}
 
   } catch (err) {
 
-    console.error("CHECK ERROR:", err);
-    res.status(500).json({ error: "AI Error" });
+    console.log("CHECK ROUTE ERROR:", err.message);
+
+    res.status(500).json({ error: "AI error" });
 
   }
 
 });
 
 /* =========================
-START SERVER
+SERVER START
 ========================= */
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+
+  console.log("=================================");
+  console.log("88 Engineering AI Server Started");
+  console.log("PORT:", PORT);
+  console.log("=================================");
+
 });
