@@ -103,7 +103,7 @@ async function analyzeImage(buffer) {
 
     const response = await axios({
       method: "POST",
-      url: "https://router.huggingface.co/hf-inference/models/Salesforce/blip2-opt-2.7b",
+      url: "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
       data: buffer,
       headers: {
         Authorization: `Bearer ${HF_KEY}`,
@@ -329,4 +329,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
 
