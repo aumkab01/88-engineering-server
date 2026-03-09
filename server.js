@@ -103,7 +103,7 @@ async function analyzeImage(buffer) {
 
     const response = await axios({
       method: "POST",
-      url: "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-base",
+      url: "https://router.huggingface.co/models/Salesforce/blip-image-captioning-base",
       data: buffer,
       headers: {
         Authorization: `Bearer ${HF_KEY}`,
