@@ -63,7 +63,7 @@ function loadFileSafe(filePath) {
 
 /* =========================
 LOAD TXT RECURSIVE
-อ่านไฟล์ใน subfolder ได้
+อ่าน txt ทุกไฟล์ + subfolder
 ========================= */
 
 function loadFolderTxtRecursive(folderPath) {
@@ -98,7 +98,7 @@ function loadFolderTxtRecursive(folderPath) {
 
           combined += `\n\n===== ${item} =====\n\n${content}`;
 
-        } catch (err) {
+        } catch {
 
           console.log("⚠ read error:", item);
 
@@ -115,26 +115,6 @@ function loadFolderTxtRecursive(folderPath) {
   return combined;
 
 }
-
-/* =========================
-LOAD KNOWLEDGE BASE
-========================= */
-
-console.log("Loading knowledge base...");
-
-const companyData = loadFileSafe("data/company.txt");
-
-const infoData = loadFolderTxtRecursive("data/INFO");
-const postData = loadFolderTxtRecursive("data/POST");
-
-/* เปลี่ยนจาก CHEAK → TECH */
-const techData = loadFolderTxtRecursive("data/TECH");
-
-const promptInfo = loadFileSafe("data/prompt-info.txt");
-const promptPost = loadFileSafe("data/prompt-post.txt");
-const promptTech = loadFileSafe("data/prompt-tech.txt");
-
-console.log("Knowledge loaded");
 
 /* =========================
 CALL AI
@@ -159,7 +139,7 @@ async function callDeepseek(systemPrompt, userInput, temp = 0.4) {
           Authorization: `Bearer ${API_KEY}`,
           "Content-Type": "application/json"
         },
-        timeout: 60000
+        timeout: 120000
       }
     );
 
@@ -208,6 +188,11 @@ app.post("/info", upload.any(), async (req, res) => {
 
   const message = req.body.message || "";
 
+  // โหลดใหม่ทุก request
+  const companyData = loadFileSafe("data/company.txt");
+  const infoData = loadFolderTxtRecursive("data/INFO");
+  const promptInfo = loadFileSafe("data/prompt-info.txt");
+
   const systemPrompt = `
 ${companyData}
 
@@ -232,6 +217,10 @@ app.post("/post", upload.any(), async (req, res) => {
 
   const message = req.body.message || "";
 
+  const companyData = loadFileSafe("data/company.txt");
+  const postData = loadFolderTxtRecursive("data/POST");
+  const promptPost = loadFileSafe("data/prompt-post.txt");
+
   const systemPrompt = `
 ${companyData}
 
@@ -255,6 +244,10 @@ app.post("/tech", upload.any(), async (req, res) => {
   if (!checkAuth(req, res)) return;
 
   const message = req.body.message || "";
+
+  const companyData = loadFileSafe("data/company.txt");
+  const techData = loadFolderTxtRecursive("data/TECH");
+  const promptTech = loadFileSafe("data/prompt-tech.txt");
 
   const systemPrompt = `
 ${companyData}
