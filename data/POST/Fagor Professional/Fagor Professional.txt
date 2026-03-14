@@ -1,0 +1,47 @@
+Fagor Professional E-VO Generation Commercial Warewashing Systems; Machine Formats: glasswasher, undercounter dishwasher (front-loading), hood type pass-through dishwasher; Undercounter installation height compatibility approx 850 mm work surface clearance internal loading clearance approx 380 mm compatible GN 1/1 trays; Rack standard 500×500 mm (20×20 inch).
+
+Product Platform Architecture: E-VO Advance (AD-505), E-VO Concept Plus (COP-504W), E-VO Concept (CO-502W); Control Interfaces: digital display (Advance), digital/LED (Concept Plus), digital/LED electromechanical hybrid (Concept); Integrated Pumps configuration: Advance drain+detergent+rinse, Concept Plus detergent+rinse drain optional, Concept drain+detergent+rinse aid; Rinse systems: Effi-Rinse air-break booster system (Advance), Effi-Rinse booster pump (Concept Plus), gravity / supply pressure dependent rinse (Concept).
+
+Performance Parameters: productivity AD-505 approx 60 racks/hr approx 1080 dishes/hr approx 2160 glasses/hr; COP-504W approx 37 racks/hr; CO-502W approx 30 racks/hr approx 750 dishes/hr approx 1080 glasses/hr; Cycle programs AD-505 60 s 90 s 120 s 180 s; CO-502W 60 s 90 s 120 s; Water consumption AD-505 approx 2.4 L/cycle; CO-502W approx 2.0–2.4 L/cycle.
+
+Hydraulic System: wash pump centrifugal approx 600 W (~0.8 HP); Soft-Start motor ramp control; Dual rotating spray arms upper+lower stainless steel AISI-304 fan-pattern nozzles; Filtration stainless steel tray filters full tank coverage; Hydraulic components: wash pump 600 W; rinse pump 150–260 W (Advance); drain pump approx 30–35 W; Tank volume approx 14 L (Advance) approx 20 L (Concept); Rinse pressure constant via booster pump (Advance) approx 20–25 psi mains dependent (Concept).
+
+Rinse System Architecture: Effi-Rinse atmospheric air-break tank type AA compliant EN 1717; rinse booster pump pressure stabilization; backflow prevention air gap isolation; rinse temperature approx 85 °C sanitation phase.
+
+Thermal System: dual heating circuits wash tank heater + rinse boiler heater; Tank capacity approx 14 L; Tank heater approx 0.8–1.0 kW; Wash temperature approx 60 °C; Boiler capacity approx 7 L; Boiler heating multipower selectable 1.8 kW / 2.8 kW / 3.73 kW / 5.6 kW; Boiler heating Concept range approx 2.8–3.5 kW; Rinse temperature approx 85–90 °C (Advance) approx 82 °C (Concept).
+
+Thermal Control Logic: Thermo-Stop rinse temperature assurance minimum 85 °C; Boiler temperature verification before rinse phase; Heating configuration modes simultaneous heating (tank + boiler) or alternate heating.
+
+Energy Systems: Eco-Fill wash tank fill from heated boiler water; Heat Recovery System (HRS) steam condensation heat exchanger preheating inlet water; Ventless heat recovery reducing ventilation requirement.
+
+Electrical Architecture: multi-voltage configuration terminal block; Electrical supply options 230 V 1N~ / 230 V 3~ / 400 V 3N~; Phase selectable 1-phase or 3-phase; Frequency 50/60 Hz (EU) 60 Hz (NA models); Installed power AD-505 approx 2.4–7.0 kW; CO-502W approx 3.5–6.2 kW; Rated current approx 20–32 A (AD-505 1-phase) approx 15–17 A (CO-502W); Minimum cable section approx 3G 4 mm²–3G 10 mm²; Electrical protection surge suppression; Enclosure protection IPX5 (Advance) IPX4 (Concept).
+
+Structural Construction: body material AISI-304 stainless steel; Deep-draw stamped wash tank construction; Weld-free tank geometry rounded internal corners; Spray arms stainless steel; Double-skin construction (Advance) insulated door; Acoustic level <65 dBA.
+
+Door Mechanics: counterbalanced door system dual spring stainless steel hinges; Lifecycle endurance approx 360 000 cycles; Magnetic door safety switch interrupting pump and heater circuits when door open.
+
+Control Electronics: central control PCB managing hydraulic thermal and dosing functions; Sensors: NTC temperature probes approx 64 kΩ tank + boiler; Pressure switches (pressostats) water level detection approx 5 Vdc control; Safety thermostats approx 125 °C boiler thermal cutoff.
+
+Diagnostics / Error Codes:
+A1 / F01 door open magnetic switch fault;
+A2 high soil load tank drain required;
+A3 / F05 wash overheat NTC probe failure or heater relay stuck;
+A4 / F06 boiler heating fault heating element or thermostat failure;
+A5 / F02 water inlet fault solenoid valve failure or pressure <1 bar;
+F03 drainage error drain pump blockage or hose obstruction;
+F07 temperature probe resistance out of range;
+F08 rinse pressure fault low pressure.
+
+Chemical Dosing System: integrated peristaltic pumps detergent dosing + rinse aid dosing; Positive displacement roller pump design chemical isolation from pump mechanism; Programmable dosing duration via digital control; Self-priming suction from external chemical containers; Optional sanitizer pump configuration low-temperature systems chlorine sanitizer dosing.
+
+Dimensions / Mass: AD-505 external dimensions approx 600 mm width × 600 mm depth × 830 mm height; Internal clearance approx 380 mm; Net weight approx 70 kg; CO-502W net weight approx 76 kg.
+
+Hydraulic Connections: water inlet connection 3/4" BSP male; Recommended inlet water temperature approx 50–60 °C; Minimum inlet temperature protection <10 °C cold-water kit; Dynamic supply pressure approx 2–4 bar (29–58 psi); Pressure regulator required above limit; Booster pump required below limit; Drain pump models allow discharge height up to approx 800 mm.
+
+Water Quality Requirements: water softener required above hardness >10 HF (French hardness) or >6 HD (German hardness); Limescale accumulation CaCO₃ insulation layer causing heater overheating.
+
+Standards and Certifications: DIN 10512 high-temperature warewashing sanitation standard; NSF/ANSI 3 sanitation compliance (ETL sanitation listing); UL 921 commercial dishwasher electrical safety; CSA electrical certification; Energy Star efficiency certification; IPX4–IPX5 ingress protection rating.
+
+Maintenance Parameters: periodic descaling heating elements and boiler circuits; wash pump seal inspection; door gasket inspection; peristaltic dosing calibration; electrical terminal tightening high-current circuits.
+
+Component Standardization: interchangeable service components across platform including Hanning drain pumps, NTC sensors, wash arm bushings, solenoid inlet valves.
