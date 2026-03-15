@@ -1,0 +1,429 @@
+# MEIKO — Engineering Knowledge Base
+
+# Machine Platforms
+
+## UPster Series
+
+Models
+
+```
+UPster U400
+UPster U500
+UPster U500G
+```
+
+Architecture
+
+```
+Rack warewasher
+Fixed speed hydraulic system
+AktivPlus filtration
+Basic MIKE CPU control
+```
+
+---
+
+## M-iClean Series
+
+Models
+
+```
+M-iClean US
+M-iClean UM
+M-iClean UM+
+M-iClean UL
+```
+
+Architecture
+
+```
+Premium warewashing platform
+Frequency controlled hydraulic system
+Active soil filtration
+ComfortAir heat recovery
+MIKE CPU4 digital control
+```
+
+---
+
+# Machine Capacity Data
+
+| Model        | Rack Size  | Entry Height | Capacity             | Cycle Time        |
+| ------------ | ---------- | ------------ | -------------------- | ----------------- |
+| UPster U400  | 400×400 mm | 300 mm       | 30 / 20 / 15 racks/h | 120 / 180 / 240 s |
+| UPster U500  | 500×500 mm | 420 mm       | 40 / 30 / 15 racks/h | 90 / 120 / 240 s  |
+| UPster U500G | 500×500 mm | 315 mm       | 40 / 30 / 15 racks/h | 90 / 120 / 240 s  |
+| M-iClean US  | 400×400 mm | 315 mm       | 37 / 24 / 17 racks/h | 95 / 150 / 210 s  |
+| M-iClean UM  | 500×500 mm | 315 mm       | 40 / 30 / 20 racks/h | 90 / 120 / 180 s  |
+| M-iClean UM+ | 500×500 mm | 435 mm       | 40 / 30 / 15 racks/h | 90 / 120 / 240 s  |
+| M-iClean UL  | 500×600 mm | 435 mm       | 40 / 30 / 15 racks/h | 90 / 120 / 240 s  |
+
+---
+
+# Structural Materials
+
+Machine housing
+
+```
+Material: AISI 304 stainless steel
+Grade: 1.4301
+```
+
+Boiler and heating manifolds
+
+```
+Material: AISI 316Ti stainless steel
+Grade: 1.4571
+```
+
+Properties
+
+```
+High corrosion resistance
+Thermal stability
+Resistance to intergranular corrosion
+```
+
+---
+
+# Hydraulic System Architecture
+
+Main hydraulic components
+
+```
+Wash pump
+Final rinse pump
+Drain pump
+Wash tank
+Spray arms
+Filtration system
+```
+
+---
+
+## Pump Specifications
+
+| Component        | UPster U500 | M-iClean UM+         | M-iClean US |
+| ---------------- | ----------- | -------------------- | ----------- |
+| Wash Pump        | 0.55 kW     | 0.50 kW              | 0.56 kW     |
+| Control          | Fixed Speed | Frequency Controlled | Fixed Speed |
+| Final Rinse Pump | Included    | 0.20 kW              | 0.20 kW     |
+| Drain Pump       | Included    | 0.07 kW              | 0.07 kW     |
+
+---
+
+## Water Consumption
+
+| Model        | Rinse Water    |
+| ------------ | -------------- |
+| UPster U500  | 2.6 L / cycle  |
+| M-iClean UM+ | 2.4 L / cycle  |
+| M-iClean US  | 2.08 L / cycle |
+
+---
+
+## Tank Capacity
+
+```
+UPster U500: 11.0 L
+M-iClean UM+: 11.0 L
+M-iClean US: 7.5 – 11.0 L
+```
+
+---
+
+## Drain Height
+
+```
+UPster series: max 700 mm
+M-iClean series: max 610 mm
+```
+
+---
+
+# Filtration Systems
+
+## AktivPlus Filtration (UPster)
+
+```
+Multi-stage wash water filtration
+Protects wash pump
+Removes large debris
+```
+
+---
+
+## Active Filtration (M-iClean)
+
+```
+Two-stage filtration
+Active soil evacuation
+Continuous soil removal during cycle
+```
+
+---
+
+# Thermal System
+
+Sanitation standards
+
+```
+DIN EN 17735
+NSF/ANSI 3
+```
+
+Temperature parameters
+
+```
+Wash tank temperature: ~60 °C
+Final rinse temperature: ~83 °C
+```
+
+---
+
+# Heater Architecture
+
+| Model        | Boiler Heater | Tank Heater | Heat Emission | Total Load |
+| ------------ | ------------- | ----------- | ------------- | ---------- |
+| UPster U500  | 6.0 kW        | 2.0 kW      | 2.1 kW        | 6.9 kW     |
+| M-iClean UM+ | 6.0 kW        | 2.0 kW      | 2.1 kW        | 6.7 kW     |
+| M-iClean US  | 4.5 kW        | 2.5 kW      | 1.5 kW        | 2.7 kW     |
+
+Electrical configuration
+
+```
+UPster U500: 400V 3N PE
+M-iClean US: single-phase compatible
+```
+
+---
+
+# Heat Recovery System
+
+## ComfortAir
+
+Function
+
+```
+Steam condensation heat recovery
+Heat exchanger transfers energy to incoming water
+```
+
+Performance
+
+```
+Energy reduction: up to 21%
+Steam reduction: up to 80%
+```
+
+---
+
+# Water Treatment Systems
+
+## GiO Reverse Osmosis Module
+
+Parameters
+
+| Parameter             | Value         |
+| --------------------- | ------------- |
+| Permeate production   | 2.0 L/min     |
+| Concentrate waste     | 3.4 L/min     |
+| Salt retention        | >98%          |
+| Output conductivity   | 70–1000 µS/cm |
+| Max input temperature | 35 °C         |
+
+---
+
+## AktivClean Softener
+
+System type
+
+```
+Ion exchange water softener
+Salt regeneration system
+Automatic regeneration cycle
+```
+
+---
+
+# Control System Architecture
+
+Control platform
+
+```
+MIKE CPU1
+MIKE CPU4
+```
+
+---
+
+## MIKE CPU1
+
+Used in
+
+```
+UPster series
+```
+
+Functions
+
+```
+Machine control
+Basic diagnostics
+Cycle management
+```
+
+---
+
+## MIKE CPU4
+
+Used in
+
+```
+M-iClean series
+```
+
+Features
+
+```
+TFT glass touchscreen
+Bluetooth diagnostics
+HACCP data logging
+LED signal handle
+```
+
+---
+
+# LED Signal Handle Logic
+
+| Color          | Meaning           |
+| -------------- | ----------------- |
+| Blue           | Machine ready     |
+| Green flashing | Wash cycle active |
+| Red            | Error or alarm    |
+
+---
+
+# Authorization Levels
+
+| Level      | Code  | Access                     |
+| ---------- | ----- | -------------------------- |
+| Operator   | 10001 | Basic settings             |
+| Technician | 40044 | Full service configuration |
+
+---
+
+# Error Codes
+
+| Code     | Meaning           |
+| -------- | ----------------- |
+| INFO 120 | Heating failure   |
+| INFO 121 | Door not closed   |
+| ERR 111  | Floor pan leakage |
+| ERR 201  | Water level error |
+| ERR 202  | Slow fill         |
+
+---
+
+# Water Supply Requirements
+
+| Parameter        | Specification |
+| ---------------- | ------------- |
+| Water connection | 3/4" GHT      |
+| Flow pressure    | 0.6 – 5.0 bar |
+| Optimal pressure | 2.0 bar       |
+| Max hardness     | 18 °dH        |
+| RO hardness      | 3 °dH         |
+| Drain connection | DN22          |
+
+---
+
+# Electrical Requirements
+
+```
+400V 3N PE (standard)
+Single-phase configuration available for low-power models
+```
+
+Cable
+
+```
+Power cord length: 2.2 m
+Terminal block connection
+```
+
+---
+
+# Sensor Systems
+
+## Water Level Sensor
+
+```
+Pressure transmitter
+Tank level monitoring
+```
+
+Function
+
+```
+Controls fill valve
+Prevents overfill
+```
+
+---
+
+## Leakage Sensor
+
+Location
+
+```
+Machine base / floor pan
+```
+
+Function
+
+```
+Detects internal water leakage
+Triggers automatic drain
+Disables inlet valve
+```
+
+---
+
+# Pump Control Logic (M-iClean)
+
+Feature
+
+```
+Frequency controlled wash pump
+Soft start hydraulic ramp
+Variable pressure control
+```
+
+Function
+
+```
+Prevents hydraulic shock
+Protects fragile glassware
+```
+
+---
+
+# Utility Limits
+
+Water pressure limit
+
+```
+Max 5.0 bar
+Pressure reducing valve required above limit
+```
+
+Phase rotation requirement
+
+```
+Correct phase order required for pump rotation
+Incorrect phase → zero wash pressure
+```
+
+---
+

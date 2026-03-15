@@ -1,0 +1,501 @@
+# HOBART — Engineering Knowledge Base
+
+## Core Engineering Principle
+
+Cleaning efficiency defined by **Sinner Circle**
+
+```
+E = M × C × T × t
+```
+
+Variables
+
+```
+M = Mechanical action (pump pressure / spray pattern)
+C = Chemical concentration (detergent / rinse aid)
+T = Temperature
+t = Time (cycle duration)
+```
+
+Sanitation requirement
+
+```
+Final rinse temperature: 82–84 °C
+Surface sanitation temperature: ~71 °C
+```
+
+Standards
+
+```
+NSF/ANSI 3
+NSF/ANSI 4
+```
+
+---
+
+# Warewashing Platform Architecture
+
+## Undercounter Platform Evolution
+
+### LXi Series
+
+```
+Control: Microprocessor
+Display: LED diagnostic codes
+Chemical dosing: Peristaltic pumps
+Diagnostics: E0–E6 codes
+Sanitation: High-Temp / Chemical
+```
+
+### LXe Series
+
+```
+Control: Smart Display
+Booster heater: Sense-A-Temp
+Chemical system: Auto-Prime dosing
+Diagnostics: Text alerts
+```
+
+### LXn Series
+
+```
+Control: Touchscreen
+Connectivity: WiFi / SmartConnect
+Chemical dosing: Smart dosing
+Diagnostics: Remote monitoring
+Wash architecture: Dual-level wash
+Tank design: deep-draw tank with rounded corners
+```
+
+---
+
+# Door-Type Warewashing Systems
+
+## AM Series
+
+Typical configuration
+
+```
+Machine type: Door type
+Wash pump: up to ~2.0 HP
+Wash arms: stainless steel rotating arms
+Rinse system: booster heater
+```
+
+### AM16 Advansys
+
+Key engineering features
+
+```
+Ventless architecture
+X-shaped wash arms
+Automatic Soil Removal (ASR)
+Digital HMI control
+```
+
+ASR System
+
+```
+ASR pump: M9
+Drain pump: M10
+Function: remove food soil before entering wash tank
+```
+
+---
+
+# Conveyor Warewashing Systems
+
+## CL Series
+
+```
+Machine type: rack conveyor
+Architecture: modular wash zones
+```
+
+## FT Series
+
+Example: FT1000e
+
+```
+Machine type: flight-type conveyor
+Drive control: Variable Frequency Drive (VFD)
+Multiple zones: wash / rinse / drying
+Continuous conveyor system
+```
+
+---
+
+# Hydraulic System Architecture
+
+Wash system
+
+```
+Wash pump power:
+Undercounter: 0.7 – 1.2 kW
+Door type: up to 2.0 HP
+```
+
+Pump function
+
+```
+Recirculating wash system
+High-velocity spray pattern
+Stainless spray arms
+```
+
+Rinse system
+
+```
+Separate rinse manifold
+Fresh water supply
+Booster heater / atmospheric boiler
+```
+
+---
+
+# Soil Management System
+
+Automatic Soil Removal (ASR)
+
+```
+Removes ~80% of food soil before entering wash tank
+Reduces water changes up to ~50%
+```
+
+Filtration architecture
+
+```
+Primary tank filters
+Soil removal pump
+External soil collector
+```
+
+---
+
+# Sensor Architecture
+
+## Temperature Sensors
+
+Type
+
+```
+NTC Thermistor
+Nominal resistance: 100kΩ
+```
+
+Operating temperature range
+
+```
+10 °C – 115 °C
+```
+
+Resistance reference table
+
+| Temperature °F | Temperature °C | Resistance |
+| -------------- | -------------- | ---------- |
+| 32             | 0              | 240–300 kΩ |
+| 70–77          | 21–25          | 90–100 kΩ  |
+| 120            | 49             | 35–40 kΩ   |
+| 150            | 65             | 20 kΩ      |
+| 165            | 74             | 13 kΩ      |
+| 180            | 82             | 10.5 kΩ    |
+
+Sensor fault indicators
+
+```
+P1 = wash probe fault
+P2 = rinse probe fault
+```
+
+---
+
+# Pressure Sensor System
+
+Used in newer Advansys machines.
+
+Sensor type
+
+```
+Pressure transducer
+Input voltage: 5VDC
+Output signal: millivolt signal proportional to water column height
+```
+
+Example threshold
+
+```
+Tank full ≈ 1000 mV signal
+```
+
+Function
+
+```
+Water level detection
+Tank pressure monitoring
+```
+
+---
+
+# Electrical Control Architecture
+
+Main components
+
+```
+Main control board
+User interface board
+Relays
+Triacs
+```
+
+High-load components controlled
+
+```
+Heating elements
+Pump motors
+Fill solenoids
+Drain valves
+```
+
+Heating element power range
+
+```
+5 kW – 15 kW
+```
+
+Triac function
+
+```
+Solid-state AC switching device
+Controls high-current loads without mechanical contacts
+```
+
+---
+
+# Sequence of Operations
+
+## AM16 Example
+
+Initialization
+
+```
+Control board startup
+Door interlock check (LS1)
+Strainer interlock check (LS2)
+```
+
+Fill phase
+
+```
+Fill valve: SOL1
+Water level detection: pressure sensor
+```
+
+Heating phase
+
+```
+Booster heater: HTR2
+Activated after safe water level detection
+```
+
+Wash phase
+
+```
+Wash pump motor: MTR1
+Cycle durations: 1 / 2 / 4 / 6 min
+```
+
+Dwell phase
+
+```
+2-second pause
+```
+
+Rinse phase
+
+```
+Rinse pump: MTR2
+Fresh hot water rinse
+```
+
+Drain phase
+
+```
+Manual or automatic drain cycle
+```
+
+---
+
+# Conveyor Machine Logic
+
+Example: FT1000e
+
+Startup
+
+```
+12VDC control circuit initialization
+VFD initialization
+```
+
+Tank fill sequence
+
+```
+Hold tank
+Dual rinse tank
+Main wash tanks
+```
+
+Temperature control enabled after
+
+```
+Lower float switch activation
+```
+
+Conveyor drive
+
+```
+Motor: 3MTR
+Controlled by VFD
+```
+
+Anti-jam protection
+
+```
+Anti-jam sensor interrupts K14 control signal
+Stops conveyor motor
+```
+
+---
+
+# Diagnostic Error Codes
+
+Common warewasher codes
+
+| Code              | Meaning               |
+| ----------------- | --------------------- |
+| E0 / E2 / E3 / E4 | Fill error            |
+| E5                | Drain error           |
+| CL / Pr           | Overfill              |
+| WASH ARM ALERT    | Spray arm obstruction |
+| 016 / 020         | Pressure sensor fault |
+| P1                | Wash probe fault      |
+| P2                | Rinse probe fault     |
+| P3                | Sensor fault          |
+
+---
+
+# Mixer Engineering Architecture
+
+## Planetary Mixers
+
+Example models
+
+```
+HL200
+HL300
+HL400
+```
+
+Motor power
+
+```
+HL300: 0.75 HP
+HL400: 1.5 HP
+```
+
+Mechanical architecture
+
+```
+Gear-driven transmission
+Planetary agitator motion
+```
+
+Planetary motion
+
+```
+Agitator rotates on its axis
+Simultaneously revolves around bowl
+```
+
+---
+
+# Slicer Mechanical Architecture
+
+Example
+
+```
+2000 Series slicers
+```
+
+Engineering components
+
+```
+Precision blade assembly
+Carriage slide rods
+Indexing thickness mechanism
+Home-position safety switch
+```
+
+Safety logic
+
+```
+Motor disabled if carriage not in home position
+```
+
+---
+
+# Lubrication Requirements
+
+| Component         | Lubricant              | Frequency      |
+| ----------------- | ---------------------- | -------------- |
+| Mixer slideways   | Lubriplate 630AA       | Semi-annual    |
+| Planetary seal    | Food-grade mineral oil | As needed      |
+| Slicer slide rods | Slicer oil             | Daily          |
+| Mixer gear cavity | 140 WT gear oil        | Major overhaul |
+
+---
+
+# Electrical Diagnostic Reference
+
+## Triac test
+
+Expected readings
+
+```
+MT1 → MT2 : OL
+Gate → MT1 : ~60 Ω
+```
+
+Fault indicator
+
+```
+Low resistance MT1-MT2 = shorted triac
+```
+
+---
+
+# Pressure Transducer Test
+
+Input
+
+```
+Black wire → 5VDC supply
+Ground → sensor ground
+Signal → output mV
+```
+
+Expected behavior
+
+```
+Empty tank → baseline mV
+Increasing water level → increasing mV
+```
+
+Failure indicators
+
+```
+No signal change
+Blocked air trap
+Sensor failure
+```
+
+

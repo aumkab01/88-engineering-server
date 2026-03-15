@@ -1,0 +1,720 @@
+# Electrolux Professional Warewashing & Laundry
+
+# Engineering Knowledge Base
+
+---
+
+# 1. Warewashing System Architecture
+
+Series
+
+* Green&Clean
+
+Machine Types
+
+* Hood-type rack machines
+* Undercounter machines
+
+Construction Material
+
+* 304 stainless steel
+* Wash tank
+* filtration systems
+* wash arms
+* rinse arms
+
+Sanitization Standards
+
+* NSF/ANSI 3
+* DIN 10512
+
+---
+
+# 2. Hood-Type Machine Engineering
+
+Model Example
+
+**EHT8I / EHT8ILG**
+
+---
+
+## Electrical
+
+Supply voltage
+
+* 400V / 3N / 50Hz
+  Convertible
+
+* 230V 1N
+
+* 230V 3~
+
+Installed power
+
+* **9.9 kW**
+
+Heating elements
+
+Boiler heater
+
+* **9 kW**
+* reducible → **6 kW**
+
+Tank heater
+
+* **3 kW**
+
+---
+
+## Hydraulic System
+
+Dynamic water pressure
+
+* **0.5 – 7 bar**
+* (50 – 700 kPa)
+
+Supply temperature
+
+* **10 – 65°C**
+
+Recommended
+
+* **50°C**
+
+---
+
+## Tank & Boiler Capacity
+
+Boiler
+
+* **12 L**
+
+Wash tank
+
+* **24 L**
+
+---
+
+## Productivity
+
+High productivity mode
+
+* **80 racks/hour**
+* ~1440 dishes/hour
+
+NSF mode
+
+* **63 racks/hour**
+* ~1134 dishes/hour
+
+---
+
+## Noise
+
+* **<63 dBA**
+
+---
+
+## Protection
+
+Ingress protection
+
+* **IP25**
+
+---
+
+# 3. Rinse System Engineering
+
+System
+
+**Atmospheric boiler**
+
+Function
+
+* stabilize rinse temperature
+* isolate from building pressure variation
+
+Rinse pump
+
+* booster pump integrated
+
+Final rinse temperature
+
+* **84°C**
+
+---
+
+## Wash Safe Control
+
+Function
+
+* verify rinse temperature
+* validate sanitization
+
+Indicator
+
+Green
+
+* sanitization OK
+
+Red
+
+* temperature failure
+
+---
+
+# 4. Hydraulic Flow Engineering
+
+Filtration system
+
+**Clear Blue filtration**
+
+Functions
+
+* soil removal
+* maintain detergent concentration
+* reduce water replacement
+
+---
+
+## Anti-drip design
+
+Slanted wash arms
+
+Sloped chamber ceiling
+
+Purpose
+
+* prevent detergent water drip after rinse
+
+---
+
+## Descaling System
+
+Device
+
+**Zero Lime**
+
+Function
+
+* automatic descaling
+* prevent mineral scale
+
+Protected components
+
+* boiler
+* heating elements
+* hydraulic circuit
+
+---
+
+# 5. Electronic Control System
+
+Controller
+
+**EFS electronic control**
+
+Functions
+
+* water fill control
+* heating control
+* wash motor control
+* drainage control
+* chemical dosing
+
+Boards
+
+* integrated control board
+* power board
+
+---
+
+# 6. Technician Parameter Menus
+
+Menu groups
+
+* GEN (general parameters)
+* FAC (factory parameters)
+* USR (user parameters)
+
+---
+
+## Access
+
+Machine standby
+
+Press
+
+ON/OFF + Cycle 1
+
+Hold
+
+**5 seconds**
+
+---
+
+# 7. Chemical Dosing Parameters
+
+| Parameter | Description                   | Default         |
+| --------- | ----------------------------- | --------------- |
+| In        | Initial detergent dosing      | 90 s            |
+| rIn       | Initial rinse aid dosing      | 10 s            |
+| dEt       | Detergent dosing during cycle | 8 s             |
+| rAi       | Rinse aid dosing during cycle | 4 s             |
+| BtC       | Boiler temperature setpoint   | model dependent |
+
+---
+
+# 8. Manual Component Activation
+
+Rinse aid pump
+
+Press
+
+Cycle 1 + Infinite
+
+Duration
+
+* **40 s**
+
+Display
+
+* rAi
+
+---
+
+Detergent pump
+
+Press
+
+Cycle 2 + Infinite
+
+Duration
+
+* **20 s**
+
+Display
+
+* dEt
+
+---
+
+Boiler drain
+
+Press
+
+Drain + Infinite
+
+Function
+
+* activate rinse pump
+* empty boiler
+
+---
+
+# 9. Water Fill Cycle Phases
+
+Fill sequence
+
+### Phase 1
+
+Static fill
+
+* wash motor OFF
+* ~40 s
+
+---
+
+### Phase 2
+
+Dynamic fill
+
+* wash motor active
+* ~20 s
+
+---
+
+### Phase 3
+
+Reset phase
+
+Purpose
+
+* reset IWMS dosing chamber
+
+---
+
+### Phase 4
+
+Cycle preparation
+
+* start wash program
+
+---
+
+# 10. Diagnostic Alarm System
+
+Alarm families
+
+* i-series alarms
+* GRS indicators
+
+---
+
+# 11. Hydraulic Fault Codes
+
+| Code      | Problem                   | Diagnostic Path                 |
+| --------- | ------------------------- | ------------------------------- |
+| i10 / i11 | Water inlet failure       | check inlet valve, supply tap   |
+| i20 / C2  | Drain error               | clean sump, inspect drain hose  |
+| i30       | Leak detected             | inspect base tray, float switch |
+| i40 / i43 | Pressure sensor fault     | clean air trap                  |
+| i50       | Wash motor fault          | test pump motor, PCB triac      |
+| iF0 / iF1 | Water level inconsistency | check siphoning                 |
+
+---
+
+## Water Inlet Diagnostic
+
+Test method
+
+Supply tap
+
+Fill 5 L bucket
+
+Time
+
+≤30 seconds
+
+Failure
+
+* insufficient pressure
+
+---
+
+## Drain Installation Requirement
+
+Drain hose height
+
+* **≥80 cm**
+* **32 inches**
+
+Failure symptom
+
+* siphoning
+* i20 alarm
+
+---
+
+# 12. Heating Fault Codes
+
+Primary alarm
+
+**i60**
+
+Meaning
+
+Heating timeout
+
+Possible causes
+
+* heater failure
+* scale buildup
+* NTC sensor error
+
+---
+
+# 13. Thermistor Engineering
+
+Sensor type
+
+**NTC 10K**
+
+Temperature-resistance curve
+
+| Temp °C | Resistance kΩ |
+| ------- | ------------- |
+| 0       | 32.6          |
+| 25      | 10            |
+| 50      | 3.6           |
+| 90      | 0.9           |
+
+---
+
+Failure conditions
+
+* scale insulation
+* open circuit
+* short circuit
+
+Related errors
+
+* i60
+* i70
+
+---
+
+# 14. Laundry System Engineering
+
+Series
+
+**Electrolux Line 6000**
+
+---
+
+# 15. Kinetic Control System
+
+Technology
+
+**Power Balance**
+
+Function
+
+* detect drum imbalance
+* adjust spin speed
+* optimize G-factor
+
+Sensors
+
+* accelerometer
+* motor back EMF monitoring
+
+---
+
+# 16. Resource Optimization
+
+System
+
+**Automatic Savings**
+
+Function
+
+* load weight detection
+* adjust water volume
+* adjust detergent dosage
+
+Measurement methods
+
+* water displacement
+* motor torque
+
+---
+
+# 17. Laundry Control Platforms
+
+Controllers
+
+ClarusVibe
+
+* touchscreen interface
+
+Compass Pro
+
+* dial/button interface
+
+---
+
+Chemical dosing
+
+* up to **15 pumps**
+* single signal cable
+
+---
+
+Suspension system
+
+* shock absorbers
+* weight rings
+
+---
+
+# 18. Laundry Error Codes
+
+| Code | Fault               | Diagnostic          |
+| ---- | ------------------- | ------------------- |
+| 01   | No water            | check inlet valve   |
+| 02   | Door open           | inspect door switch |
+| 03   | Door unlocked       | test lock solenoid  |
+| 06   | Water in drum       | check siphoning     |
+| 10   | Not drained         | clean pump          |
+| 11   | Unbalance fault     | inspect suspension  |
+| 13   | Motor communication | check inverter      |
+| 27   | Level calibration   | clean pressure tube |
+| 32   | Motor overheating   | inspect motor load  |
+| 40   | Line interrupt      | check phase voltage |
+
+---
+
+# 19. Pressure Sensor Fault
+
+Error
+
+**27**
+
+Cause
+
+* blocked pressure tube
+* detergent residue
+
+Repair
+
+* clean air trap
+* recalibrate sensor
+
+---
+
+# 20. EWM Diagnostic Mode
+
+Activation
+
+1. Power OFF
+2. Selector → RESET
+3. Hold START + adjacent button
+4. Power ON
+
+---
+
+### Diagnostic Sequence
+
+Step 1
+wash compartment fill
+
+Step 2
+prewash fill
+
+Step 3
+conditioner fill
+
+Step 4
+hot water fill
+
+Step 5
+heating system test
+
+Step 6
+leak test
+
+Step 7
+drain + spin
+
+Step 8
+drying circuit test
+
+---
+
+# 21. Heating Circuit Engineering
+
+Common configuration
+
+**3-terminal heater**
+
+Supply
+
+* 240V phase-to-phase
+
+Diagnostic condition
+
+120V to ground
+but
+0V across heater
+
+Possible cause
+
+* open L2 path
+
+---
+
+## Centrifugal Switch
+
+Function
+
+* enable heater when motor reaches speed
+
+Failure causes
+
+* worn motor bearings
+* weak start capacitor
+
+Symptom
+
+* motor runs
+* heater inactive
+
+---
+
+# 22. Thermal Safety Devices
+
+| Device                | Function                  | Temp      |
+| --------------------- | ------------------------- | --------- |
+| NTC thermistor        | temperature sensing       | 0-95°C    |
+| Thermal fuse          | dryer overheat protection | 100-150°C |
+| High limit thermostat | heater cutoff             | 95-120°C  |
+
+---
+
+# 23. Preventative Maintenance
+
+---
+
+## Daily
+
+Dishwasher
+
+* clean tank filters
+* clean wash arms
+
+Laundry
+
+* clean lint filter
+* inspect door seal
+
+---
+
+## Monthly
+
+* delime wash chamber
+* clean detergent drawer
+
+---
+
+## Bi-annual
+
+* inspect drive belts
+* inspect motor brushes
+* check electrical terminal torque
+
+---
+
+# 24. Digital Monitoring System
+
+Platform
+
+**OnE Connected**
+
+Functions
+
+* remote monitoring
+* machine alerts
+* usage statistics
+* predictive maintenance
+
+Database
+
+* 300+ notifications
+* 23 troubleshooting procedures
+
+---
+
+# 25. Common Field Failures
+
+| Failure              | Cause              | Repair               |
+| -------------------- | ------------------ | -------------------- |
+| Dishes not drying    | low rinse temp     | check rinse aid      |
+| Foam in tank         | wrong detergent    | flush system         |
+| Dryer EF1            | clogged exhaust    | clean duct           |
+| Washer E10           | siphoning          | correct drain height |
+| Control panel glitch | moisture           | power cycle          |
+| No heat              | blown thermal fuse | replace fuse         |
+
+---
+

@@ -1,0 +1,586 @@
+# Ecolab EcoTemp — Engineering Technical 
+
+# 1. System Categories
+
+### Door-Type Rack Machines
+
+Models
+
+* ES-2000
+* ES-4000
+* ELT
+
+Characteristics
+
+* Rack inserted manually
+* Single wash chamber
+* Rotating spray arms
+* Chemical injection phases
+* HT / Low Temp versions
+
+---
+
+### Undercounter Machines
+
+Models
+
+* E-ULT
+* ELT variants
+
+Characteristics
+
+* Fits under 34 inch counter
+* Recirculating wash system
+* Double-wall insulation
+* Low noise operation
+* Bar / glassware usage
+
+---
+
+### Conveyor Systems
+
+Models
+
+* EC-44
+* EC-66
+
+Characteristics
+
+* Continuous rack transport
+* Zones
+
+  * Pre-wash
+  * Wash
+  * Final rinse
+* Multi-stage filtration
+* Heating stages
+* Conveyor drive motor
+
+Max throughput
+
+* EC-66 → **244 racks/hour**
+
+---
+
+# 2. Machine Throughput
+
+| Model     | Type         | Sanitization | Racks/hr |
+| --------- | ------------ | ------------ | -------- |
+| ES-2000   | Door         | Low Temp     | 40       |
+| ES-4000   | Door         | Low Temp     | 78-80    |
+| ELT       | Door         | Low Temp     | 54       |
+| E-ULT     | Undercounter | Low Temp     | 25       |
+| ES-2000HT | Door         | High Temp    | 55       |
+| EC-66     | Conveyor     | Dual         | 244      |
+
+---
+
+# 3. Cycle Parameters
+
+| Parameter   | ES2000 | ES4000 | ELT  | E-ULT |
+| ----------- | ------ | ------ | ---- | ----- |
+| Total cycle | 90 s   | 92 s   | 67 s | 142 s |
+| Wash        | 42 s   | 53 s   | 50 s | 90 s  |
+| Dwell       | 18 s   | 20 s   | 1 s  | 5 s   |
+| Rinse       | 25 s   | 14 s   | 11 s | 17 s  |
+| Load        | 5 s    | 5 s    | 5 s  | 30 s  |
+
+E-ULT
+
+* Extended wash phase
+* Recirculating wash design
+
+Water use
+
+* **0.84 gal/rack**
+
+---
+
+# 4. Water Consumption
+
+| Model   | gal/rack | 100 racks/day |
+| ------- | -------- | ------------- |
+| ES-2000 | 1.02     | 102 gal       |
+| ES-4000 | 1.17     | 117 gal       |
+| ELT     | 0.83     | 83 gal        |
+| E-ULT   | 0.84     | 84 gal        |
+| EC-66   | 0.62     | 62 gal        |
+
+EC-66
+
+* Counter-flow reuse system
+
+---
+
+# 5. Hydraulic System
+
+### Wash Pump Power
+
+ES-2000 / ES-4000
+
+* **3/4 HP wash pump**
+
+ELT / E-ULT
+
+* **1 HP wash pump**
+
+EC-66
+
+* Wash pump → **2 HP**
+* Prewash pump → **1 HP**
+* Conveyor motor → **1/4 HP**
+
+---
+
+### Flow Rate
+
+E-ULT
+
+* **40 GPM**
+
+---
+
+### Spray System
+
+Material
+
+* **304 stainless steel**
+
+Types
+
+* Drilled nozzle
+* Embossed nozzle
+
+Operating pressure
+
+* **15-25 PSI**
+
+Limits
+
+| Condition | Result        |
+| --------- | ------------- |
+| <15 PSI   | poor cleaning |
+
+> 25 PSI | atomization / heat loss |
+
+Max system pressure
+
+* **35 PSI**
+
+---
+
+# 6. Filtration System
+
+Components
+
+* Sump strainer
+* Self-cleaning sump
+
+Functions
+
+* Debris removal
+* Prevent redeposition
+
+Pumped drain models
+
+* ELT
+* E-ULT
+
+Allows
+
+* Elevated drain installation
+
+---
+
+# 7. Thermal System
+
+---
+
+## Low Temperature Sanitization
+
+Sanitizer
+
+* **Sodium hypochlorite**
+
+Required concentration
+
+* **≥ 50 ppm**
+
+Temperatures
+
+Wash tank
+
+* **≥120°F**
+
+Incoming water
+
+* **140°F recommended**
+
+Error
+
+C6
+
+* Low temperature warning
+
+---
+
+## High Temperature Sanitization
+
+Example model
+
+* ES-2000HT
+
+Temperatures
+
+Wash
+
+* **≥150°F**
+
+Final rinse
+
+* **≥180°F**
+
+Incoming water
+
+* **110-140°F**
+
+Booster heater required
+
+Safety system
+
+**Rinse Sentry**
+
+Prevents rinse start if
+
+* rinse < 180°F
+
+---
+
+# 8. Electrical Specifications
+
+Supported voltages
+
+* 115V
+* 120V
+* 208V
+* 230V
+* 460V
+
+---
+
+### Electrical Load
+
+| Model     | Voltage | Phase | Amps  | Min Circuit |
+| --------- | ------- | ----- | ----- | ----------- |
+| ES-2000   | 115V    | 1PH   | 12A   | 15A         |
+| ES-4000   | 115V    | 1PH   | 23A   | 30A         |
+| ELT       | 115V    | 1PH   | 12A   | 15A         |
+| E-ULT     | 120V    | 1PH   | 10A   | 15A         |
+| ES-2000HT | 208V    | 1PH   | 75.2A | 100A        |
+| ES-2000HT | 208V    | 3PH   | 46.8A | 60A         |
+| ES-2000HT | 230V    | 1PH   | 68.8A | 90A         |
+| EC-66     | 460V    | 3PH   | 24.1A | 30A         |
+
+---
+
+# 9. Control System
+
+Controller
+
+* Microprocessor based
+
+Functions
+
+* Cycle control
+* Temperature monitoring
+* Chemical dosing control
+* Diagnostics
+
+Technician mode
+
+* Pump test
+* Heater test
+* Solenoid test
+
+---
+
+# 10. Sensors
+
+### Conductivity Sensor
+
+Models
+
+* LMI 03
+* LMIT 10
+
+Function
+
+* detergent concentration monitoring
+
+Feature
+
+* temperature compensated
+
+---
+
+### IoT System
+
+DishIQ
+
+Monitors
+
+* chemical levels
+* rinse temperature
+* machine usage
+* predictive maintenance
+
+Cloud dashboard
+
+---
+
+# 11. Chemical Dosing System
+
+Pump type
+
+* **Diaphragm metering pump**
+
+Examples
+
+* TurboPUMP
+* Elados EMP II
+
+Flow rate
+
+* **11.2 – 13.0 L/h**
+
+Materials
+
+* EPDM
+* Viton
+
+---
+
+### Chemicals
+
+Detergent
+
+* **EcoTemp Ultra Klene**
+* pH ≈ **13.5**
+
+Alternative
+
+* **Solid Power XL**
+
+Sanitizer
+
+* Chlorine based
+
+Minimum
+
+* **50 ppm**
+
+---
+
+# 12. Materials
+
+Primary construction
+
+* **304 stainless steel**
+
+Panels
+
+* Double wall insulation
+
+---
+
+### Wear Components
+
+Spray arm bushings
+
+* **HDPE**
+
+Door mechanism
+
+* Spring assisted lift
+
+---
+
+### Weight
+
+E-ULT
+
+* **179 lb**
+
+EC-66
+
+* **888 lb**
+
+---
+
+# 13. Error Codes
+
+| Code | Meaning            | Check                              |
+| ---- | ------------------ | ---------------------------------- |
+| E1   | Water supply error | supply valve / strainer / solenoid |
+| E2   | Drain error        | sump / drain hose / pump           |
+| E3   | Heating error      | element / thermostat / relay       |
+| E4   | Overflow           | float switch / fill valve          |
+| C6   | Low temp           | water heater / rinse probe scale   |
+| FTD  | Failure to drain   | drain hose / impeller              |
+
+---
+
+# 14. Common Technical Problems
+
+---
+
+## Machine Not Powering
+
+Check
+
+* circuit breaker
+* heater short
+* wiring
+* door switch
+
+---
+
+## Poor Cleaning
+
+Check
+
+* clogged spray nozzles
+* low water level
+* cavitation
+* dirty sump filter
+
+---
+
+## Continuous Drain
+
+Possible causes
+
+* drain ball failure
+* debris in drain seat
+* bent drain rod
+
+---
+
+## Continuous Cycling
+
+Check
+
+* DELIME mode
+* controller stuck in FILL
+* timer motor failure
+* solenoid relay
+
+---
+
+# 15. Installation Requirements
+
+Water line
+
+* **1/2" – 3/4" NPT**
+
+Water pressure
+
+* **15-25 PSI**
+
+Max pressure
+
+* **35 PSI**
+
+Drain
+
+* **1.5" – 2"**
+
+Elevated drain
+
+* max **3 ft**
+
+Backflow protection
+
+* **RPZ valve**
+
+---
+
+# 16. Ventilation
+
+Recommended hood airflow
+
+* **400-600 CFM**
+
+Required for
+
+* high temp machines
+
+---
+
+# 17. Maintenance
+
+---
+
+### Daily
+
+* clean scrap filter
+* rinse tank interior
+* check spray arm rotation
+
+---
+
+### Monthly
+
+* delime machine
+* clean Y-strainer
+* inspect pump seals
+
+---
+
+### Annual
+
+Pump calibration
+
+* **11.2 – 13.0 L/h**
+
+Temperature calibration
+
+* verify with external probe
+
+---
+
+# 18. Compliance
+
+Standards
+
+NSF / ANSI 3
+UL / cUL 921
+Energy Star 3.0
+ASSE 1004
+
+---
+
+# สรุปสิ่งที่ผม "ตัดออก"
+
+ผมตัดเฉพาะ
+
+* บทพรรณนา
+* background
+* explanation เชิง narrative
+* marketing wording
+* philosophy (Sinner's Circle explanation)
+
+แต่ **Technical data ถูกเก็บทั้งหมด**
+
+เช่น
+
+* spec
+* pump
+* PSI
+* temperature
+* cycle time
+* electrical
+* troubleshooting
+* error codes
+* maintenance
+

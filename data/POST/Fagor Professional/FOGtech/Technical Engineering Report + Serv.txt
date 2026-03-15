@@ -1,0 +1,684 @@
+Technical Engineering Report + Service Manual + System Architecture** ของเครื่องล้างจานอุตสาหกรรม Fagor E-VO Generation
+
+แบ่งได้ประมาณ **12 หมวดหลัก**
+
+---
+
+# 1️⃣ Engineering Overview
+
+### Comprehensive Engineering Analysis
+
+อธิบายภาพรวม
+
+* เครื่องล้างจานอุตสาหกรรมในครัวเชิงพาณิชย์
+* ต้องมี
+
+  * mechanical durability
+  * thermal precision
+  * chemical efficiency
+* วิเคราะห์แพลตฟอร์ม
+
+**รุ่นที่พูดถึง**
+
+* AD-505 (Advance)
+* COP-504W (Concept Plus)
+* CO-502W (Concept)
+
+---
+
+# 2️⃣ Product Platform Architecture
+
+แนวคิดการออกแบบแพลตฟอร์ม
+
+**E-VO Generation**
+
+แนวคิดหลัก
+
+```
+Standardized chassis
+Modular architecture
+Rack standard 500x500 mm
+```
+
+ใช้ร่วมกับ
+
+* glasswasher
+* undercounter dishwasher
+* hood-type dishwasher
+
+---
+
+# 3️⃣ Structural Engineering & Materials
+
+โครงสร้างเครื่อง
+
+Material
+
+```
+AISI 304 Stainless Steel
+18% Chromium
+8% Nickel
+```
+
+ข้อดี
+
+* corrosion resistance
+* alkaline detergent resistance
+* high temperature durability
+
+เทคนิคการผลิต
+
+```
+Deep-draw stamped tank
+Weld-free interior
+```
+
+ข้อดี
+
+* ลด biofilm
+* ไม่มี food debris trap
+* drainage ดีขึ้น
+
+---
+
+# 4️⃣ Structural Specification Table
+
+ในเอกสารมีตาราง
+
+| Feature   | Spec        |
+| --------- | ----------- |
+| Chassis   | AISI 304    |
+| Tank      | Weld-free   |
+| Geometry  | Rounded     |
+| Size      | 600x600x830 |
+| Clearance | 380 mm      |
+| Weight    | 70-76 kg    |
+
+---
+
+# 5️⃣ Advance Model Features
+
+เฉพาะรุ่น **Advance (AD-505)**
+
+เพิ่ม
+
+```
+Double-skin body
+Insulated door
+```
+
+ผลลัพธ์
+
+เสียงต่ำกว่า
+
+```
+< 65 dBA
+```
+
+และช่วย
+
+```
+heat retention
+energy efficiency
+```
+
+---
+
+# 6️⃣ Hydraulic System Engineering
+
+ระบบน้ำล้าง
+
+Wash pump
+
+```
+600 W
+≈ 0.8 HP
+```
+
+ระบบฉีดน้ำ
+
+```
+Dual rotating spray arms
+Upper + Lower
+```
+
+วัสดุ
+
+```
+Stainless Steel
+```
+
+---
+
+# 7️⃣ Soft-Start Motor Technology
+
+เทคโนโลยีสำคัญ
+
+```
+Soft Start Pump Control
+```
+
+ปัญหาเครื่องล้างทั่วไป
+
+```
+Hydraulic shockwave
+```
+
+ผลกระทบ
+
+* จานเลื่อน
+* แก้วแตก
+
+Soft-Start แก้โดย
+
+```
+Gradual RPM ramp
+Pressure ramp-up
+```
+
+---
+
+# 8️⃣ Rinse System Architecture (Effi-Rinse)
+
+แบ่งเป็น 3 ระบบ
+
+### Advance
+
+Effi-Rinse
+
+มี
+
+```
+Atmospheric tank
+Booster pump
+20–25 psi stable pressure
+```
+
+มาตรฐาน
+
+```
+EN 1717 Type AA
+```
+
+---
+
+### Concept Plus
+
+มี
+
+```
+Rinse booster pump
+```
+
+แต่ไม่มี tank เต็ม
+
+---
+
+### Concept
+
+ใช้
+
+```
+mains pressure
+```
+
+ต้องมี
+
+```
+2–4 bar
+```
+
+---
+
+# 9️⃣ Filtration System
+
+ระบบกรอง
+
+มี 2 ชั้น
+
+1️⃣ Tray filter
+2️⃣ Suction filter
+
+บางรุ่นมี
+
+```
+Drain pump auto flush
+```
+
+---
+
+# 🔟 Thermal System
+
+ระบบความร้อน
+
+มี
+
+2 circuit
+
+```
+Tank heater
+Boiler heater
+```
+
+---
+
+## Thermo-Stop
+
+ระบบสำคัญมาก
+
+ควบคุมอุณหภูมิ
+
+ต้องถึง
+
+```
+85°C rinse
+```
+
+มาตรฐาน
+
+```
+NSF/ANSI 3
+DIN 10512
+```
+
+ถ้าไม่ถึง
+
+```
+machine pause
+```
+
+---
+
+# 11️⃣ Boiler & Power Configuration
+
+Boiler
+
+```
+7 L
+```
+
+Multipower heater
+
+AD-505
+
+```
+1.8 kW
+2.8 kW
+3.73 kW
+5.6 kW
+```
+
+Concept
+
+```
+2.8 – 3.5 kW
+```
+
+---
+
+# 12️⃣ Heating Modes
+
+มี 2 โหมด
+
+### Simultaneous heating
+
+tank + boiler
+
+ข้อดี
+
+```
+fast recovery
+high productivity
+```
+
+---
+
+### Alternate heating
+
+boiler ก่อน
+
+ข้อดี
+
+```
+lower electrical load
+```
+
+---
+
+# 13️⃣ Energy Saving Systems
+
+มี 2 เทคโนโลยี
+
+### Eco-Fill
+
+ใช้ heat boiler เติม tank
+
+---
+
+### HRS
+
+Heat Recovery System
+
+ดึง
+
+```
+steam heat
+```
+
+ไป preheat water
+
+ข้อดี
+
+* ลดพลังงาน
+* ลด humidity
+* บางที่ไม่ต้องมี hood
+
+---
+
+# 14️⃣ Electrical Architecture
+
+รองรับไฟ
+
+```
+230V 1 phase
+230V 3 phase
+400V 3 phase
+```
+
+มี
+
+```
+IPX5 protection
+surge protection
+```
+
+---
+
+# 15️⃣ Sensor System
+
+ใช้
+
+```
+NTC Thermistor
+64kΩ
+```
+
+ใช้วัด
+
+```
+temperature feedback
+```
+
+ตัวอย่างค่า
+
+| Temp | Resistance |
+| ---- | ---------- |
+| 25°C | 64kΩ       |
+| 60°C | ~3kΩ       |
+| 85°C | ~1.7kΩ     |
+
+---
+
+# 16️⃣ Chemical Dosing System
+
+มี
+
+```
+Peristaltic pump
+```
+
+สำหรับ
+
+* detergent
+* rinse aid
+
+ข้อดี
+
+```
+chemical never touches motor
+```
+
+---
+
+# 17️⃣ Water Quality Requirements
+
+ต้องมี
+
+```
+Water hardness < 10 °fH
+```
+
+ไม่งั้น
+
+```
+CaCO3 scale
+```
+
+จะเกิด
+
+```
+heater burnout
+```
+
+---
+
+# 18️⃣ Diagnostic Error System
+
+มี error codes
+
+เช่น
+
+| Code | Meaning        |
+| ---- | -------------- |
+| A1   | Door open      |
+| F01  | Door sensor    |
+| F03  | Drain error    |
+| F05  | Tank overheat  |
+| F06  | Boiler fail    |
+| F07  | NTC fault      |
+| F08  | Rinse pressure |
+
+---
+
+# 19️⃣ Field Service Problems
+
+ปัญหาที่พบจริง
+
+### จานไม่สะอาด
+
+สาเหตุ
+
+```
+clogged spray arms
+```
+
+---
+
+### Drain error (F03)
+
+สาเหตุ
+
+```
+toothpick
+glass shard
+plastic
+```
+
+ติด pump
+
+---
+
+### Leak
+
+สาเหตุ
+
+```
+door gasket
+pump seal
+```
+
+---
+
+### Boiler timeout (F06)
+
+สาเหตุ
+
+```
+scale
+low water level
+```
+
+---
+
+# 20️⃣ Maintenance Protocol
+
+### Daily
+
+* drain tank
+* clean filter
+* wipe gasket
+
+---
+
+### Quarterly
+
+* descale
+* tighten terminals
+* calibrate pumps
+
+---
+
+# 21️⃣ Service Menu
+
+ในรุ่น digital
+
+ปรับได้
+
+```
+cycle time
+rinse delay
+soft start duration
+heater power
+```
+
+---
+
+# 22️⃣ Electrical Wiring
+
+ตัวอย่าง
+
+| Voltage      | Current |
+| ------------ | ------- |
+| 230V 1 phase | 20-32A  |
+| 230V 3 phase | 17-20A  |
+| 400V 3 phase | 11-17A  |
+
+---
+
+# 23️⃣ Standards & Certification
+
+เครื่องผ่าน
+
+```
+NSF/ANSI 3
+DIN 10512
+UL 921
+CSA
+Energy Star
+```
+
+---
+
+# 24️⃣ Final Engineering Conclusion
+
+สรุป
+
+รุ่นที่ดีที่สุด
+
+```
+AD-505
+```
+
+เพราะ
+
+```
+Effi-Rinse
+pressure stabilization
+sanitation reliability
+```
+
+---
+
+# สิ่งที่ผม “ตัดออก” ตอนทำเวอร์ชันก่อน
+
+ผมตัดสิ่งเหล่านี้
+
+### 1️⃣ narrative description ยาว ๆ
+
+เช่น
+
+```
+philosophical explanation
+environment explanation
+commercial kitchen discussion
+```
+
+---
+
+### 2️⃣ redundant explanation
+
+เช่น
+
+```
+biofilm explanation
+detergent chemistry description
+heat transfer theory
+```
+
+---
+
+### 3️⃣ บางตาราง
+
+เช่น
+
+```
+sensor resistance table
+electrical cable table
+```
+
+---
+
+### 4️⃣ ตัวอย่าง troubleshooting บางส่วน
+
+เช่น
+
+```
+toothpick example
+plastic wrap example
+```
+
+---
+
+# สรุปสั้นที่สุด
+
+มักกี้ที่คุณส่งจริง ๆ คือ
+
+```
+Engineering White Paper
++
+Technical Service Manual
++
+System Architecture
++
+Troubleshooting Guide
++
+Maintenance Protocol
+```
+
+ของ
+
+```
+Fagor E-VO Commercial Dishwasher
+```
+
+
